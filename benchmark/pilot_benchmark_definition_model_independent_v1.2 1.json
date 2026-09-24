@@ -1,0 +1,1050 @@
+{
+  "benchmark_name": "T2M_Diagnostic_Benchmark_Pilot",
+  "schema_version": "1.2-draft",
+  "status": "pilot_validation_definition",
+  "description": "Machine-readable, model-independent definition of the 96-prompt T2M diagnostic benchmark. Uses the team-revised 18-prompt Pilot selection, explicit requirement dependency metadata for evaluator routing, and an explicit difficulty-assignment definition. Motion generation length is determined by each source model rather than prescribed by this definition. Evaluator implementations and thresholds are not yet frozen.",
+  "prompt_count": 18,
+  "capabilities": {
+    "C1": "Basic Action",
+    "C2": "Spatial Control",
+    "C3": "Attribute Control",
+    "C4": "Event Structure",
+    "C5": "Composition & Generalisation"
+  },
+  "difficulty_definition": {
+    "principle": "Difficulty reflects overall instruction-execution complexity, not simply the number of atomic requirements.",
+    "factors": [
+      "event complexity",
+      "control complexity",
+      "temporal complexity",
+      "relational complexity"
+    ],
+    "levels": {
+      "Easy": "Single basic action with simple control and no complex event relationships.",
+      "Medium": "Additional control demands or simple multi-event structure, such as body-side control, attributes, moderate counting, or two-event ordering.",
+      "Hard": "Advanced execution demands such as higher counting, cross-body relations, simultaneity, or multi-action composition."
+    },
+    "note": "Atomic requirement count may contribute to complexity, but it does not determine difficulty by itself."
+  },
+  "evaluator_registry": {
+    "action": "ActionEvaluator",
+    "direction": "TrajectoryEvaluator",
+    "torso_direction": "TorsoGeometryEvaluator",
+    "body_side": "BodySideEvaluator",
+    "arm_direction": "LimbGeometryEvaluator",
+    "leg_direction": "LimbGeometryEvaluator",
+    "turn_direction": "RotationEvaluator",
+    "count": "CountEvaluator",
+    "order": "OrderEvaluator",
+    "attribute": "AttributeEvaluator",
+    "simultaneous": "SimultaneousEvaluator",
+    "relation": "SpatialRelationEvaluator",
+    "target": "SpatialRelationEvaluator"
+  },
+  "prompts": [
+    {
+      "prompt_id": "C1-01",
+      "set": "Pilot",
+      "capability": "C1",
+      "subtype": "locomotion",
+      "difficulty": "Easy",
+      "text": "A person walks forward.",
+      "pair_id": "PAIR-C1-FB-WALK",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "forward",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "root direction",
+        "walk detector"
+      ]
+    },
+    {
+      "prompt_id": "C1-02",
+      "set": "Pilot",
+      "capability": "C1",
+      "subtype": "locomotion",
+      "difficulty": "Easy",
+      "text": "A person walks backward.",
+      "pair_id": "PAIR-C1-FB-WALK",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "backward",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "root direction",
+        "walk detector"
+      ]
+    },
+    {
+      "prompt_id": "C1-06",
+      "set": "Pilot",
+      "capability": "C1",
+      "subtype": "turn",
+      "difficulty": "Easy",
+      "text": "A person turns to the left.",
+      "pair_id": "PAIR-C1-TURN",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "turn"
+        },
+        {
+          "id": "r2",
+          "type": "turn_direction",
+          "value": "left",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Turn Control"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "torso yaw"
+      ]
+    },
+    {
+      "prompt_id": "C1-07",
+      "set": "Pilot",
+      "capability": "C1",
+      "subtype": "turn",
+      "difficulty": "Easy",
+      "text": "A person turns to the right.",
+      "pair_id": "PAIR-C1-TURN",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "turn"
+        },
+        {
+          "id": "r2",
+          "type": "turn_direction",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Turn Control"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "torso yaw"
+      ]
+    },
+    {
+      "prompt_id": "C2-01",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "root_direction",
+      "difficulty": "Easy",
+      "text": "A person walks to the left.",
+      "pair_id": "PAIR-C2-LR-WALK",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "left",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "root direction"
+      ]
+    },
+    {
+      "prompt_id": "C2-02",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "root_direction",
+      "difficulty": "Easy",
+      "text": "A person walks to the right.",
+      "pair_id": "PAIR-C2-LR-WALK",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "root direction"
+      ]
+    },
+    {
+      "prompt_id": "C2-09",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "leg_side",
+      "difficulty": "Medium",
+      "text": "A person kicks the left leg out to the side.",
+      "pair_id": "PAIR-C2-KICK-SIDE",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "kick"
+        },
+        {
+          "id": "r2",
+          "type": "body_side",
+          "value": "left",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "leg_direction",
+          "value": "side",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Body-side Control",
+        "Limb Direction"
+      ],
+      "complexity": {
+        "requirement_count": 3,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "leg vector",
+        "semantic validation"
+      ]
+    },
+    {
+      "prompt_id": "C2-10",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "leg_side",
+      "difficulty": "Medium",
+      "text": "A person kicks the right leg out to the side.",
+      "pair_id": "PAIR-C2-KICK-SIDE",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "kick"
+        },
+        {
+          "id": "r2",
+          "type": "body_side",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "leg_direction",
+          "value": "side",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Body-side Control",
+        "Limb Direction"
+      ],
+      "complexity": {
+        "requirement_count": 3,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "leg vector",
+        "semantic validation"
+      ]
+    },
+    {
+      "prompt_id": "C2-19",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "cross_body",
+      "difficulty": "Hard",
+      "text": "A person moves the left hand across the body toward the right shoulder.",
+      "pair_id": "PAIR-C2-CROSS",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "reach"
+        },
+        {
+          "id": "r2",
+          "type": "body_side",
+          "value": "left",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "target",
+          "value": "right_shoulder",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r4",
+          "type": "relation",
+          "value": "cross_body",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Body-side Control",
+        "Spatial Relation"
+      ],
+      "complexity": {
+        "requirement_count": 4,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "joint-distance geometry",
+        "semantic validation"
+      ]
+    },
+    {
+      "prompt_id": "C2-20",
+      "set": "Pilot",
+      "capability": "C2",
+      "subtype": "cross_body",
+      "difficulty": "Hard",
+      "text": "A person moves the right hand across the body toward the left shoulder.",
+      "pair_id": "PAIR-C2-CROSS",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "reach"
+        },
+        {
+          "id": "r2",
+          "type": "body_side",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "target",
+          "value": "left_shoulder",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r4",
+          "type": "relation",
+          "value": "cross_body",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Body-side Control",
+        "Spatial Relation"
+      ],
+      "complexity": {
+        "requirement_count": 4,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "joint-distance geometry",
+        "semantic validation"
+      ]
+    },
+    {
+      "prompt_id": "C3-01",
+      "set": "Pilot",
+      "capability": "C3",
+      "subtype": "speed",
+      "difficulty": "Medium",
+      "text": "A person walks slowly forward.",
+      "pair_id": "PAIR-C3-SPEED",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "forward",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "attribute",
+          "value": "slow",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Attribute Control"
+      ],
+      "complexity": {
+        "requirement_count": 3,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": true
+      },
+      "primary_scoring_path": [
+        "paired root speed"
+      ]
+    },
+    {
+      "prompt_id": "C3-02",
+      "set": "Pilot",
+      "capability": "C3",
+      "subtype": "speed",
+      "difficulty": "Medium",
+      "text": "A person walks quickly forward.",
+      "pair_id": "PAIR-C3-SPEED",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "forward",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "attribute",
+          "value": "fast",
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Attribute Control"
+      ],
+      "complexity": {
+        "requirement_count": 3,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": false,
+        "has_attribute": true
+      },
+      "primary_scoring_path": [
+        "paired root speed"
+      ]
+    },
+    {
+      "prompt_id": "C4-01",
+      "set": "Pilot",
+      "capability": "C4",
+      "subtype": "order",
+      "difficulty": "Medium",
+      "text": "A person jumps once and then turns right.",
+      "pair_id": "PAIR-C4-ORDER1",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "jump"
+        },
+        {
+          "id": "r2",
+          "type": "count",
+          "value": 1,
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "action",
+          "value": "turn"
+        },
+        {
+          "id": "r4",
+          "type": "turn_direction",
+          "value": "right",
+          "applies_to": [
+            "r3"
+          ]
+        },
+        {
+          "id": "r5",
+          "type": "order",
+          "value": [
+            "jump",
+            "turn"
+          ],
+          "applies_to": [
+            "r1",
+            "r3"
+          ],
+          "event_sequence": [
+            {
+              "event": "jump",
+              "requirement_ids": [
+                "r1"
+              ]
+            },
+            {
+              "event": "turn",
+              "requirement_ids": [
+                "r3"
+              ]
+            }
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Turn Control",
+        "Action Counting",
+        "Temporal Order"
+      ],
+      "complexity": {
+        "requirement_count": 5,
+        "has_order": true,
+        "has_count": true,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "jump",
+        "yaw timestamps"
+      ]
+    },
+    {
+      "prompt_id": "C4-02",
+      "set": "Pilot",
+      "capability": "C4",
+      "subtype": "order",
+      "difficulty": "Medium",
+      "text": "A person turns right and then jumps once.",
+      "pair_id": "PAIR-C4-ORDER1",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "turn"
+        },
+        {
+          "id": "r2",
+          "type": "turn_direction",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "action",
+          "value": "jump"
+        },
+        {
+          "id": "r4",
+          "type": "count",
+          "value": 1,
+          "applies_to": [
+            "r3"
+          ]
+        },
+        {
+          "id": "r5",
+          "type": "order",
+          "value": [
+            "turn",
+            "jump"
+          ],
+          "applies_to": [
+            "r1",
+            "r3"
+          ],
+          "event_sequence": [
+            {
+              "event": "turn",
+              "requirement_ids": [
+                "r1"
+              ]
+            },
+            {
+              "event": "jump",
+              "requirement_ids": [
+                "r3"
+              ]
+            }
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Turn Control",
+        "Action Counting",
+        "Temporal Order"
+      ],
+      "complexity": {
+        "requirement_count": 5,
+        "has_order": true,
+        "has_count": true,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "yaw",
+        "jump timestamps"
+      ]
+    },
+    {
+      "prompt_id": "C4-09",
+      "set": "Pilot",
+      "capability": "C4",
+      "subtype": "frequency",
+      "difficulty": "Medium",
+      "text": "A person jumps twice.",
+      "pair_id": "PAIR-C4-JCOUNT",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "jump"
+        },
+        {
+          "id": "r2",
+          "type": "count",
+          "value": 2,
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Action Counting"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": true,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "jump count"
+      ]
+    },
+    {
+      "prompt_id": "C4-10",
+      "set": "Pilot",
+      "capability": "C4",
+      "subtype": "frequency",
+      "difficulty": "Hard",
+      "text": "A person jumps three times.",
+      "pair_id": "PAIR-C4-JCOUNT",
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "jump"
+        },
+        {
+          "id": "r2",
+          "type": "count",
+          "value": 3,
+          "applies_to": [
+            "r1"
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Action Counting"
+      ],
+      "complexity": {
+        "requirement_count": 2,
+        "has_order": false,
+        "has_count": true,
+        "has_simultaneity": false,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "jump count"
+      ]
+    },
+    {
+      "prompt_id": "C4-19",
+      "set": "Pilot",
+      "capability": "C4",
+      "subtype": "simultaneous",
+      "difficulty": "Hard",
+      "text": "A person walks forward while raising the right hand.",
+      "pair_id": null,
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r2",
+          "type": "direction",
+          "value": "forward",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "action",
+          "value": "raise_hand"
+        },
+        {
+          "id": "r4",
+          "type": "body_side",
+          "value": "right",
+          "applies_to": [
+            "r3"
+          ]
+        },
+        {
+          "id": "r5",
+          "type": "simultaneous",
+          "value": [
+            "walk",
+            "raise"
+          ],
+          "applies_to": [
+            "r1",
+            "r3"
+          ],
+          "event_group": [
+            {
+              "event": "walk",
+              "requirement_ids": [
+                "r1"
+              ]
+            },
+            {
+              "event": "raise",
+              "requirement_ids": [
+                "r3"
+              ]
+            }
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Body-side Control",
+        "Simultaneous Execution"
+      ],
+      "complexity": {
+        "requirement_count": 5,
+        "has_order": false,
+        "has_count": false,
+        "has_simultaneity": true,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "root interval",
+        "arm interval"
+      ]
+    },
+    {
+      "prompt_id": "C5-16",
+      "set": "Pilot",
+      "capability": "C5",
+      "subtype": "composition",
+      "difficulty": "Hard",
+      "text": "A person turns right, walks forward, and then jumps once with both hands raised.",
+      "pair_id": null,
+      "requirements": [
+        {
+          "id": "r1",
+          "type": "action",
+          "value": "turn"
+        },
+        {
+          "id": "r2",
+          "type": "turn_direction",
+          "value": "right",
+          "applies_to": [
+            "r1"
+          ]
+        },
+        {
+          "id": "r3",
+          "type": "action",
+          "value": "walk"
+        },
+        {
+          "id": "r4",
+          "type": "direction",
+          "value": "forward",
+          "applies_to": [
+            "r3"
+          ]
+        },
+        {
+          "id": "r5",
+          "type": "action",
+          "value": "jump"
+        },
+        {
+          "id": "r6",
+          "type": "count",
+          "value": 1,
+          "applies_to": [
+            "r5"
+          ]
+        },
+        {
+          "id": "r7",
+          "type": "action",
+          "value": "raise_hands"
+        },
+        {
+          "id": "r8",
+          "type": "body_side",
+          "value": "both",
+          "applies_to": [
+            "r7"
+          ]
+        },
+        {
+          "id": "r9",
+          "type": "simultaneous",
+          "value": [
+            "jump",
+            "hands"
+          ],
+          "applies_to": [
+            "r5",
+            "r7"
+          ],
+          "event_group": [
+            {
+              "event": "jump",
+              "requirement_ids": [
+                "r5"
+              ]
+            },
+            {
+              "event": "hands",
+              "requirement_ids": [
+                "r7"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "r10",
+          "type": "order",
+          "value": [
+            "turn",
+            "walk",
+            "jump"
+          ],
+          "applies_to": [
+            "r1",
+            "r3",
+            "r5"
+          ],
+          "event_sequence": [
+            {
+              "event": "turn",
+              "requirement_ids": [
+                "r1"
+              ]
+            },
+            {
+              "event": "walk",
+              "requirement_ids": [
+                "r3"
+              ]
+            },
+            {
+              "event": "jump",
+              "requirement_ids": [
+                "r5"
+              ]
+            }
+          ]
+        }
+      ],
+      "diagnostic_axes": [
+        "Action Execution",
+        "Spatial Direction",
+        "Body-side Control",
+        "Turn Control",
+        "Action Counting",
+        "Temporal Order",
+        "Simultaneous Execution"
+      ],
+      "complexity": {
+        "requirement_count": 10,
+        "has_order": true,
+        "has_count": true,
+        "has_simultaneity": true,
+        "has_attribute": false
+      },
+      "primary_scoring_path": [
+        "atomic aggregate",
+        "semantic validation"
+      ]
+    }
+  ],
+  "subset_info": {
+    "subset": "Pilot",
+    "source_benchmark": "T2M_Diagnostic_Benchmark",
+    "source_schema_version": "1.1-draft",
+    "purpose": "Evaluator implementation, calibration, and validation before full benchmark evaluation.",
+    "full_benchmark_prompt_count": 96
+  }
+}
