@@ -1,0 +1,4 @@
+Human Gold Labels
+
+One file per model: <ModelName>_pilot_human_gold_labels.json, created in STEP 9D/9E of
+evaluation/run_benchmark.ipynb. Add new files via a Pull Request.
