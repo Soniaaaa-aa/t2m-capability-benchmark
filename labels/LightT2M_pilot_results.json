@@ -1,0 +1,2663 @@
+{
+  "metadata": {
+    "model": "LightT2M",
+    "framework_commit": "b17f390",
+    "branch": "main",
+    "benchmark_source": "pilot_benchmark_definition_model_independent_v1.2 1.json",
+    "benchmark_version": "1.2-draft",
+    "evaluator_rules": {
+      "ActionEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "walk_min_duration_s": 1.0,
+          "walk_min_distance_m": 0.5,
+          "turn_min_deg": 45.0,
+          "min_events": 1
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "AttributeEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "speed_ratio": 1.2,
+          "min_walk_speed": 0.3,
+          "abs_slow_max": 0.9,
+          "abs_fast_min": 1.4
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "BodyFrameDirectionEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_displacement": 0.5
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "BodySideEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_activity": 0.7,
+          "side_margin": 0.25,
+          "both_max_imbalance": 0.5
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "CountEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "tolerance": 0
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "LimbGeometryEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_extent": 0.35,
+          "min_dominance": 1.2
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "OrderEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_start_gap_frames": 1
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "RotationEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_turn_deg": 45.0
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "SimultaneousEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_overlap_ratio": 0.5
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "SpatialRelationEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "target_max_dist_sw": 0.75,
+          "cross_min_sw": 0.25,
+          "above_head_min_m": 0.05,
+          "front_min_sw": 1.0,
+          "behind_min_sw": 0.2,
+          "together_max_sw": 0.4
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "TorsoGeometryEvaluator": {
+        "CURRENT_THRESHOLDS": {
+          "min_tilt_deg": 15.0,
+          "min_dominance": 1.5
+        },
+        "CURRENT_THRESHOLD_STATUS": "provisional_not_frozen"
+      },
+      "TrajectoryEvaluator": {
+        "CURRENT_MIN_DISPLACEMENT": 0.5,
+        "CURRENT_THRESHOLD_STATUS": "pilot_candidate_not_frozen"
+      }
+    },
+    "created_utc": "2026-09-26T16:33:12+00:00"
+  },
+  "results": [
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-01",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.024654095560152,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 3.4 s, 2.02 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 32,
+            "end": 100,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 2.024654095560152,
+              "path_length_m": 2.0581157889209134,
+              "mean_speed_mps": 0.60959000493218,
+              "steps": 4,
+              "cadence_steps_per_s": 1.1764705882352942
+            },
+            "start_s": 1.6,
+            "end_s": 5.0
+          }
+        ],
+        "longest_walk_s": 3.4,
+        "longest_walk_distance_m": 2.024654095560152,
+        "score": 2.024654095560152,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-01",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "forward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.017365043611505,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right -0.17 m, forward +2.02 m; required forward >= 0.5 m",
+      "evidence": {
+        "window": [
+          32,
+          100
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": -3.7664772391256505,
+        "step": null,
+        "lateral_right_m": -0.17164640247570273,
+        "forward_m": 2.017365043611505,
+        "world_dx_m": -0.04522992856800556,
+        "world_dz_m": 2.0511477291584015,
+        "required_displacement_m": 2.017365043611505,
+        "score": 2.017365043611505,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-02",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.099214323462105,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 2.9 s, 2.10 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 38,
+            "end": 96,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 2.099214323462105,
+              "path_length_m": 2.1173207834059298,
+              "mean_speed_mps": 0.7355790567680258,
+              "steps": 5,
+              "cadence_steps_per_s": 1.7241379310344829
+            },
+            "start_s": 1.9,
+            "end_s": 4.8
+          }
+        ],
+        "longest_walk_s": 2.9,
+        "longest_walk_distance_m": 2.099214323462105,
+        "score": 2.099214323462105,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-02",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "backward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.039640612339683,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right -0.50 m, forward -2.04 m; required backward >= 0.5 m",
+      "evidence": {
+        "window": [
+          38,
+          96
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": 0.15621676498481113,
+        "step": null,
+        "lateral_right_m": -0.49655508085515265,
+        "forward_m": -2.039640612339683,
+        "world_dx_m": -0.4843676220625639,
+        "world_dz_m": -2.046658143401146,
+        "required_displacement_m": 2.039640612339683,
+        "score": 2.039640612339683,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-06",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "turn",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 109.54051256449155,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "largest turn 110 deg (need >= 45.0)",
+      "evidence": {
+        "action": "turn",
+        "event_kind": "turn",
+        "n_events": 2,
+        "events": [
+          {
+            "kind": "turn",
+            "start": 20,
+            "end": 58,
+            "side": "left",
+            "attrs": {
+              "yaw_change_deg": 109.54051256449155,
+              "peak_rate_deg_s": 117.12969316321883
+            },
+            "start_s": 1.0,
+            "end_s": 2.9
+          },
+          {
+            "kind": "turn",
+            "start": 60,
+            "end": 79,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -64.90247292465193,
+              "peak_rate_deg_s": 108.61673356076669
+            },
+            "start_s": 3.0,
+            "end_s": 3.95
+          }
+        ],
+        "max_turn_deg": 109.54051256449155,
+        "score": 109.54051256449155,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-06",
+      "requirement_index": 1,
+      "requirement_type": "turn_direction",
+      "expected_value": "left",
+      "evaluator": "RotationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 109.54051256449155,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "dominant turn +110 deg (left); required left >= 45 deg",
+      "evidence": {
+        "n_turn_events": 2,
+        "dominant_yaw_change_deg": 109.54051256449155,
+        "dominant_turn": {
+          "kind": "turn",
+          "start": 20,
+          "end": 58,
+          "side": "left",
+          "attrs": {
+            "yaw_change_deg": 109.54051256449155,
+            "peak_rate_deg_s": 117.12969316321883
+          },
+          "start_s": 1.0,
+          "end_s": 2.9
+        },
+        "net_yaw_change_deg": 65.65361960519658,
+        "turn_events": [
+          {
+            "kind": "turn",
+            "start": 20,
+            "end": 58,
+            "side": "left",
+            "attrs": {
+              "yaw_change_deg": 109.54051256449155,
+              "peak_rate_deg_s": 117.12969316321883
+            },
+            "start_s": 1.0,
+            "end_s": 2.9
+          },
+          {
+            "kind": "turn",
+            "start": 60,
+            "end": 79,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -64.90247292465193,
+              "peak_rate_deg_s": 108.61673356076669
+            },
+            "start_s": 3.0,
+            "end_s": 3.95
+          }
+        ],
+        "score": 109.54051256449155,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-07",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "turn",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 108.16217469565791,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "largest turn 108 deg (need >= 45.0)",
+      "evidence": {
+        "action": "turn",
+        "event_kind": "turn",
+        "n_events": 3,
+        "events": [
+          {
+            "kind": "turn",
+            "start": 15,
+            "end": 56,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -108.16217469565791,
+              "peak_rate_deg_s": 87.02877519242661
+            },
+            "start_s": 0.75,
+            "end_s": 2.8
+          },
+          {
+            "kind": "turn",
+            "start": 58,
+            "end": 75,
+            "side": "left",
+            "attrs": {
+              "yaw_change_deg": 44.54522156965105,
+              "peak_rate_deg_s": 76.43662247655692
+            },
+            "start_s": 2.9,
+            "end_s": 3.75
+          },
+          {
+            "kind": "turn",
+            "start": 76,
+            "end": 100,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -59.88755355347209,
+              "peak_rate_deg_s": 69.05935406491503
+            },
+            "start_s": 3.8,
+            "end_s": 5.0
+          }
+        ],
+        "max_turn_deg": 108.16217469565791,
+        "score": 108.16217469565791,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C1-07",
+      "requirement_index": 1,
+      "requirement_type": "turn_direction",
+      "expected_value": "right",
+      "evaluator": "RotationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 108.16217469565791,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "dominant turn -108 deg (right); required right >= 45 deg",
+      "evidence": {
+        "n_turn_events": 3,
+        "dominant_yaw_change_deg": -108.16217469565791,
+        "dominant_turn": {
+          "kind": "turn",
+          "start": 15,
+          "end": 56,
+          "side": "right",
+          "attrs": {
+            "yaw_change_deg": -108.16217469565791,
+            "peak_rate_deg_s": 87.02877519242661
+          },
+          "start_s": 0.75,
+          "end_s": 2.8
+        },
+        "net_yaw_change_deg": -123.26839822636188,
+        "turn_events": [
+          {
+            "kind": "turn",
+            "start": 15,
+            "end": 56,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -108.16217469565791,
+              "peak_rate_deg_s": 87.02877519242661
+            },
+            "start_s": 0.75,
+            "end_s": 2.8
+          },
+          {
+            "kind": "turn",
+            "start": 58,
+            "end": 75,
+            "side": "left",
+            "attrs": {
+              "yaw_change_deg": 44.54522156965105,
+              "peak_rate_deg_s": 76.43662247655692
+            },
+            "start_s": 2.9,
+            "end_s": 3.75
+          },
+          {
+            "kind": "turn",
+            "start": 76,
+            "end": 100,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -59.88755355347209,
+              "peak_rate_deg_s": 69.05935406491503
+            },
+            "start_s": 3.8,
+            "end_s": 5.0
+          }
+        ],
+        "score": 108.16217469565791,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-01",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.84100225785548,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 3.5 s, 2.84 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 20,
+            "end": 90,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 2.84100225785548,
+              "path_length_m": 3.0425874022561454,
+              "mean_speed_mps": 0.8716964354630488,
+              "steps": 6,
+              "cadence_steps_per_s": 1.7142857142857142
+            },
+            "start_s": 1.0,
+            "end_s": 4.5
+          }
+        ],
+        "longest_walk_s": 3.5,
+        "longest_walk_distance_m": 2.84100225785548,
+        "score": 2.84100225785548,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-01",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "left",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1.6851507468834364,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right -1.69 m, forward +2.29 m; required left >= 0.5 m",
+      "evidence": {
+        "window": [
+          20,
+          90
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": 0.5162714110808995,
+        "step": null,
+        "lateral_right_m": -1.6851507468834364,
+        "forward_m": 2.287260542530765,
+        "world_dx_m": -1.6749774143099785,
+        "world_dz_m": 2.3001205958426,
+        "required_displacement_m": 1.6851507468834364,
+        "score": 1.6851507468834364,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-02",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.5740105356496925,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 3.7 s, 2.57 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 26,
+            "end": 100,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 2.5740105356496925,
+              "path_length_m": 2.7632181823832265,
+              "mean_speed_mps": 0.7500060716740804,
+              "steps": 5,
+              "cadence_steps_per_s": 1.3513513513513513
+            },
+            "start_s": 1.3,
+            "end_s": 5.0
+          }
+        ],
+        "longest_walk_s": 3.7,
+        "longest_walk_distance_m": 2.5740105356496925,
+        "score": 2.5740105356496925,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-02",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "right",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": -0.5398159798478344,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "body frame (ref frame 0): right -0.54 m, forward +2.52 m; required right >= 0.5 m",
+      "evidence": {
+        "window": [
+          26,
+          100
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": -1.8463101323774842,
+        "step": null,
+        "lateral_right_m": -0.5398159798478344,
+        "forward_m": 2.516769545575545,
+        "world_dx_m": -0.4697382226586342,
+        "world_dz_m": 2.551743619143963,
+        "required_displacement_m": -0.5398159798478344,
+        "score": -0.5398159798478344,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-09",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "kick",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "1 kick event(s) detected",
+      "evidence": {
+        "action": "kick",
+        "event_kind": "kick",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "kick",
+            "start": 0,
+            "end": 100,
+            "side": "left",
+            "attrs": {
+              "peak_frame": 85,
+              "peak_deviation": 0.9734371158020174,
+              "peak_clearance_m": 0.760752086341381,
+              "outward": 0.4102651049474117,
+              "forward": -0.07896842985096952,
+              "up": 0.8792191701562881
+            },
+            "start_s": 0.0,
+            "end_s": 5.0
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-09",
+      "requirement_index": 1,
+      "requirement_type": "body_side",
+      "expected_value": "left",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.7714485057419167,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "leg: A_left=0.95, A_right=0.12, LI=+0.77 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted left, required left",
+      "evidence": {
+        "limb_used": "leg",
+        "left_activity": 0.9548730551332558,
+        "right_activity": 0.12319729032800747,
+        "laterality_index": 0.7714485057419167,
+        "raw_side": "left",
+        "limb_length_m": 0.7898041641581202,
+        "left_detail": {
+          "activity": 0.9548730551332558,
+          "peak_deviation": 1.0007093625661923,
+          "peak_rise": 0.850047866018111,
+          "peak_horizontal": 0.5559061254767045
+        },
+        "right_detail": {
+          "activity": 0.12319729032800747,
+          "peak_deviation": 0.16090552149871445,
+          "peak_rise": 0.03764928355032591,
+          "peak_horizontal": 0.11862038398412748
+        },
+        "all_limbs": {
+          "left_arm": 1.2996758285798709,
+          "right_arm": 0.37309267922582084,
+          "left_leg": 0.9548730551332558,
+          "right_leg": 0.12319729032800747
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-09",
+      "requirement_index": 2,
+      "requirement_type": "leg_direction",
+      "expected_value": "side",
+      "evaluator": "LimbGeometryEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.41493017784664016,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "left leg at frame 85: outward=0.41 (need >= 0.35), best other horizontal=0.08",
+      "evidence": {
+        "limb": "leg",
+        "side": "left",
+        "side_source": "body_side",
+        "direction": "outward",
+        "peak_frame": 85,
+        "peak_deviation": 1.0001338378211917,
+        "window": [
+          0,
+          100
+        ],
+        "window_source": "event:kick",
+        "components": {
+          "outward": 0.41493017784664016,
+          "inward": 0,
+          "forward": 0,
+          "backward": 0.07778876326271283,
+          "up": 0.9066739781469366,
+          "down": 0
+        },
+        "competitor": 0.07778876326271283,
+        "score": 0.41493017784664016,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-10",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "kick",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "1 kick event(s) detected",
+      "evidence": {
+        "action": "kick",
+        "event_kind": "kick",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "kick",
+            "start": 12,
+            "end": 100,
+            "side": "right",
+            "attrs": {
+              "peak_frame": 41,
+              "peak_deviation": 1.0935684439890647,
+              "peak_clearance_m": 0.6413307160139085,
+              "outward": 0.6437332956033566,
+              "forward": 0.5490740320196339,
+              "up": 0.6928326588592715
+            },
+            "start_s": 0.6,
+            "end_s": 5.0
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-10",
+      "requirement_index": 1,
+      "requirement_type": "body_side",
+      "expected_value": "right",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.6835641837332895,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "leg: A_left=0.20, A_right=1.06, LI=-0.68 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted right, required right",
+      "evidence": {
+        "limb_used": "leg",
+        "left_activity": 0.19892146070590339,
+        "right_activity": 1.058341174545611,
+        "laterality_index": -0.6835641837332895,
+        "raw_side": "right",
+        "limb_length_m": 0.81201597098123,
+        "left_detail": {
+          "activity": 0.19892146070590339,
+          "peak_deviation": 0.2069033712120858,
+          "peak_rise": 0.08549982327096023,
+          "peak_horizontal": 0.19330228010729975
+        },
+        "right_detail": {
+          "activity": 1.058341174545611,
+          "peak_deviation": 1.111390478997931,
+          "peak_rise": 0.6987249005781647,
+          "peak_horizontal": 0.8076052492825022
+        },
+        "all_limbs": {
+          "left_arm": 0.25192687894535165,
+          "right_arm": 0.9408678776710465,
+          "left_leg": 0.19892146070590339,
+          "right_leg": 1.058341174545611
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-10",
+      "requirement_index": 2,
+      "requirement_type": "leg_direction",
+      "expected_value": "side",
+      "evaluator": "LimbGeometryEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.6506617360915486,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": false,
+      "reason": "right leg at frame 41: outward=0.65 (need >= 0.35), best other horizontal=0.57",
+      "evidence": {
+        "limb": "leg",
+        "side": "right",
+        "side_source": "body_side",
+        "direction": "outward",
+        "peak_frame": 41,
+        "peak_deviation": 1.1125575631222147,
+        "window": [
+          12,
+          100
+        ],
+        "window_source": "event:kick",
+        "components": {
+          "outward": 0.6506617360915486,
+          "inward": 0,
+          "forward": 0.572985173026912,
+          "backward": 0,
+          "up": 0.6976850138045477,
+          "down": 0
+        },
+        "competitor": 0.572985173026912,
+        "score": 0.6506617360915486,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-19",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "reach",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 4,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": false,
+      "reason": "4 reach event(s) detected",
+      "evidence": {
+        "action": "reach",
+        "event_kind": "reach",
+        "n_events": 4,
+        "events": [
+          {
+            "kind": "reach",
+            "start": 0,
+            "end": 18,
+            "side": "left",
+            "attrs": {
+              "peak_frame": 4,
+              "peak_deviation": 1.515674782922001
+            },
+            "start_s": 0.0,
+            "end_s": 0.9
+          },
+          {
+            "kind": "reach",
+            "start": 47,
+            "end": 80,
+            "side": "left",
+            "attrs": {
+              "peak_frame": 55,
+              "peak_deviation": 1.4497471689148784
+            },
+            "start_s": 2.35,
+            "end_s": 4.0
+          },
+          {
+            "kind": "reach",
+            "start": 0,
+            "end": 18,
+            "side": "right",
+            "attrs": {
+              "peak_frame": 4,
+              "peak_deviation": 1.483690639629708
+            },
+            "start_s": 0.0,
+            "end_s": 0.9
+          },
+          {
+            "kind": "reach",
+            "start": 47,
+            "end": 81,
+            "side": "right",
+            "attrs": {
+              "peak_frame": 73,
+              "peak_deviation": 1.1007946540317382
+            },
+            "start_s": 2.35,
+            "end_s": 4.05
+          }
+        ],
+        "score": 4,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-19",
+      "requirement_index": 1,
+      "requirement_type": "body_side",
+      "expected_value": "left",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.011323654663818614,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "arm: A_left=1.48, A_right=1.45, LI=+0.01 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted both, required left",
+      "evidence": {
+        "limb_used": "arm",
+        "left_activity": 1.4849636001929047,
+        "right_activity": 1.4517097254793083,
+        "laterality_index": 0.011323654663818614,
+        "raw_side": "left",
+        "limb_length_m": 0.5249518551300436,
+        "left_detail": {
+          "activity": 1.4849636001929047,
+          "peak_deviation": 1.5212905173552775,
+          "peak_rise": 1.173284299954941,
+          "peak_horizontal": 0.9603963548894938
+        },
+        "right_detail": {
+          "activity": 1.4517097254793083,
+          "peak_deviation": 1.487588766920218,
+          "peak_rise": 1.048414560298239,
+          "peak_horizontal": 1.0050484803312343
+        },
+        "all_limbs": {
+          "left_arm": 1.4849636001929047,
+          "right_arm": 1.4517097254793083,
+          "left_leg": 0.1150236471951062,
+          "right_leg": 0.12330367223646731
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-19",
+      "requirement_index": 2,
+      "requirement_type": "target",
+      "expected_value": "right_shoulder",
+      "evaluator": "SpatialRelationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.42488121589614003,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": false,
+      "reason": "left arm closest to right_shoulder: 0.42 × shoulder width (need <= 0.75)",
+      "evidence": {
+        "requirement_type": "target",
+        "limb": "arm",
+        "side_source": "body_side",
+        "shoulder_width_m": 0.401528505398206,
+        "side": "left",
+        "per_side": {
+          "left": {
+            "min_dist_m": 0.1706019195905496,
+            "frame": 63,
+            "start_dist_m": 0.8924246171844374
+          }
+        },
+        "target_joint": 17,
+        "min_dist_sw": 0.42488121589614003,
+        "score": 0.42488121589614003,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-19",
+      "requirement_index": 3,
+      "requirement_type": "relation",
+      "expected_value": "cross_body",
+      "evaluator": "SpatialRelationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.6548180473556633,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "cross_body: left arm = 0.65 (threshold 0.25)",
+      "evidence": {
+        "requirement_type": "relation",
+        "limb": "arm",
+        "side_source": "body_side",
+        "shoulder_width_m": 0.401528505398206,
+        "relation": "cross_body",
+        "side": "left",
+        "per_side": {
+          "left": 0.6548180473556633
+        },
+        "score": 0.6548180473556633,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-20",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "reach",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 4,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": false,
+      "reason": "4 reach event(s) detected",
+      "evidence": {
+        "action": "reach",
+        "event_kind": "reach",
+        "n_events": 4,
+        "events": [
+          {
+            "kind": "reach",
+            "start": 0,
+            "end": 14,
+            "side": "left",
+            "attrs": {
+              "peak_frame": 0,
+              "peak_deviation": 1.3784980797494335
+            },
+            "start_s": 0.0,
+            "end_s": 0.7
+          },
+          {
+            "kind": "reach",
+            "start": 49,
+            "end": 79,
+            "side": "left",
+            "attrs": {
+              "peak_frame": 60,
+              "peak_deviation": 1.6793928145845631
+            },
+            "start_s": 2.45,
+            "end_s": 3.95
+          },
+          {
+            "kind": "reach",
+            "start": 0,
+            "end": 14,
+            "side": "right",
+            "attrs": {
+              "peak_frame": 3,
+              "peak_deviation": 1.2691532357964541
+            },
+            "start_s": 0.0,
+            "end_s": 0.7
+          },
+          {
+            "kind": "reach",
+            "start": 49,
+            "end": 96,
+            "side": "right",
+            "attrs": {
+              "peak_frame": 60,
+              "peak_deviation": 1.613772586687948
+            },
+            "start_s": 2.45,
+            "end_s": 4.8
+          }
+        ],
+        "score": 4,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-20",
+      "requirement_index": 1,
+      "requirement_type": "body_side",
+      "expected_value": "right",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": -0.01995553237579199,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "arm: A_left=1.65, A_right=1.59, LI=+0.02 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted both, required right",
+      "evidence": {
+        "limb_used": "arm",
+        "left_activity": 1.6506878156686842,
+        "right_activity": 1.5860960698482538,
+        "laterality_index": 0.01995553237579199,
+        "raw_side": "left",
+        "limb_length_m": 0.53018780709581,
+        "left_detail": {
+          "activity": 1.6506878156686842,
+          "peak_deviation": 1.6919250853364793,
+          "peak_rise": 1.4184637846520702,
+          "peak_horizontal": 0.9624762606611859
+        },
+        "right_detail": {
+          "activity": 1.5860960698482538,
+          "peak_deviation": 1.6162438997062827,
+          "peak_rise": 1.3254355115357637,
+          "peak_horizontal": 0.9511426485931846
+        },
+        "all_limbs": {
+          "left_arm": 1.6506878156686842,
+          "right_arm": 1.5860960698482538,
+          "left_leg": 0.1685872689188057,
+          "right_leg": 0.11685766112705327
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-20",
+      "requirement_index": 2,
+      "requirement_type": "target",
+      "expected_value": "left_shoulder",
+      "evaluator": "SpatialRelationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.9352140430219883,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "right arm closest to left_shoulder: 0.94 × shoulder width (need <= 0.75)",
+      "evidence": {
+        "requirement_type": "target",
+        "limb": "arm",
+        "side_source": "body_side",
+        "shoulder_width_m": 0.39589414014028024,
+        "side": "right",
+        "per_side": {
+          "right": {
+            "min_dist_m": 0.3702457594093051,
+            "frame": 80,
+            "start_dist_m": 0.8712475951248622
+          }
+        },
+        "target_joint": 16,
+        "min_dist_sw": 0.9352140430219883,
+        "score": 0.9352140430219883,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C2-20",
+      "requirement_index": 3,
+      "requirement_type": "relation",
+      "expected_value": "cross_body",
+      "evaluator": "SpatialRelationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": -0.20563872614074666,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "cross_body: right arm = -0.21 (threshold 0.25)",
+      "evidence": {
+        "requirement_type": "relation",
+        "limb": "arm",
+        "side_source": "body_side",
+        "shoulder_width_m": 0.39589414014028024,
+        "relation": "cross_body",
+        "side": "right",
+        "per_side": {
+          "right": -0.20563872614074666
+        },
+        "score": -0.20563872614074666,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-01",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.313548843616333,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 3.9 s, 2.31 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 23,
+            "end": 100,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 2.313548843616333,
+              "path_length_m": 2.3708646278808962,
+              "mean_speed_mps": 0.618782329477286,
+              "steps": 4,
+              "cadence_steps_per_s": 1.0389610389610389
+            },
+            "start_s": 1.15,
+            "end_s": 5.0
+          }
+        ],
+        "longest_walk_s": 3.85,
+        "longest_walk_distance_m": 2.313548843616333,
+        "score": 2.313548843616333,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-01",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "forward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2.2772002366635085,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right -0.41 m, forward +2.28 m; required forward >= 0.5 m",
+      "evidence": {
+        "window": [
+          23,
+          100
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": -4.342471092168309,
+        "step": null,
+        "lateral_right_m": -0.40849398274409543,
+        "forward_m": 2.2772002366635085,
+        "world_dx_m": -0.2383788749575615,
+        "world_dz_m": 2.322849754244089,
+        "required_displacement_m": 2.2772002366635085,
+        "score": 2.2772002366635085,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-01",
+      "requirement_index": 2,
+      "requirement_type": "attribute",
+      "expected_value": "slow",
+      "evaluator": "AttributeEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.618782329477286,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "slow (no partner, absolute rule): 0.62 m/s",
+      "evidence": {
+        "attribute": "slow",
+        "self_speed_mps": 0.618782329477286,
+        "self_walk_detected": true,
+        "mode": "absolute_fallback",
+        "partner_prompt_id": null,
+        "pair_id": null,
+        "score": 0.618782329477286,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-02",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1.967054504684231,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "longest walk 2.0 s, 1.97 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "walk",
+            "start": 40,
+            "end": 81,
+            "side": null,
+            "attrs": {
+              "net_displacement_m": 1.967054504684231,
+              "path_length_m": 1.9725021633861912,
+              "mean_speed_mps": 0.9661257146186585,
+              "steps": 4,
+              "cadence_steps_per_s": 1.9512195121951221
+            },
+            "start_s": 2.0,
+            "end_s": 4.05
+          }
+        ],
+        "longest_walk_s": 2.05,
+        "longest_walk_distance_m": 1.967054504684231,
+        "score": 1.967054504684231,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-02",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "forward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1.9608761333098235,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right +0.16 m, forward +1.96 m; required forward >= 0.5 m",
+      "evidence": {
+        "window": [
+          40,
+          81
+        ],
+        "window_source": "action_events",
+        "reference_frame": 0,
+        "reference_yaw_deg": 2.066807528763634,
+        "step": null,
+        "lateral_right_m": 0.1557825863645912,
+        "forward_m": 1.9608761333098235,
+        "world_dx_m": 0.08462031930685043,
+        "world_dz_m": 1.9718628749251366,
+        "required_displacement_m": 1.9608761333098235,
+        "score": 1.9608761333098235,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C3-02",
+      "requirement_index": 2,
+      "requirement_type": "attribute",
+      "expected_value": "fast",
+      "evaluator": "AttributeEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.9661257146186585,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": false,
+      "reason": "fast (no partner, absolute rule): 0.97 m/s",
+      "evidence": {
+        "attribute": "fast",
+        "self_speed_mps": 0.9661257146186585,
+        "self_walk_detected": true,
+        "mode": "absolute_fallback",
+        "partner_prompt_id": null,
+        "pair_id": null,
+        "score": 0.9661257146186585,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-01",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "jump",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "1 jump event(s) detected",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 36,
+            "end": 46,
+            "side": null,
+            "attrs": {
+              "flight_frames": 10,
+              "peak_clearance_m": 0.3163275256752968,
+              "pelvis_rise_m": 0.3787713766098023
+            },
+            "start_s": 1.8,
+            "end_s": 2.3
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-01",
+      "requirement_index": 1,
+      "requirement_type": "count",
+      "expected_value": 1,
+      "evaluator": "CountEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "jump: detected 1, required 1",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "body_side": null,
+        "detected_count": 1,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 36,
+            "end": 46,
+            "side": null,
+            "attrs": {
+              "flight_frames": 10,
+              "peak_clearance_m": 0.3163275256752968,
+              "pelvis_rise_m": 0.3787713766098023
+            },
+            "start_s": 1.8,
+            "end_s": 2.3
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-01",
+      "requirement_index": 2,
+      "requirement_type": "action",
+      "expected_value": "turn",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 93.58900884430301,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "largest turn 94 deg (need >= 45.0)",
+      "evidence": {
+        "action": "turn",
+        "event_kind": "turn",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "turn",
+            "start": 12,
+            "end": 70,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -93.58900884430301,
+              "peak_rate_deg_s": 85.16609759276967
+            },
+            "start_s": 0.6,
+            "end_s": 3.5
+          }
+        ],
+        "max_turn_deg": 93.58900884430301,
+        "score": 93.58900884430301,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-01",
+      "requirement_index": 3,
+      "requirement_type": "turn_direction",
+      "expected_value": "right",
+      "evaluator": "RotationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 93.58900884430301,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "dominant turn -94 deg (right); required right >= 45 deg",
+      "evidence": {
+        "n_turn_events": 1,
+        "dominant_yaw_change_deg": -93.58900884430301,
+        "dominant_turn": {
+          "kind": "turn",
+          "start": 12,
+          "end": 70,
+          "side": "right",
+          "attrs": {
+            "yaw_change_deg": -93.58900884430301,
+            "peak_rate_deg_s": 85.16609759276967
+          },
+          "start_s": 0.6,
+          "end_s": 3.5
+        },
+        "net_yaw_change_deg": -109.76529075034645,
+        "turn_events": [
+          {
+            "kind": "turn",
+            "start": 12,
+            "end": 70,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -93.58900884430301,
+              "peak_rate_deg_s": 85.16609759276967
+            },
+            "start_s": 0.6,
+            "end_s": 3.5
+          }
+        ],
+        "score": 93.58900884430301,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-01",
+      "requirement_index": 4,
+      "requirement_type": "order",
+      "expected_value": [
+        "jump",
+        "turn"
+      ],
+      "evaluator": "OrderEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": -24,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "first occurrences: jump@1.80s -> turn@0.60s",
+      "evidence": {
+        "steps": [
+          {
+            "event": "jump",
+            "event_kind": "jump",
+            "n_events": 1,
+            "first_start": 36,
+            "first_end": 46
+          },
+          {
+            "event": "turn",
+            "event_kind": "turn",
+            "n_events": 1,
+            "first_start": 12,
+            "first_end": 70
+          }
+        ],
+        "missing": [],
+        "start_gaps_frames": [
+          -24
+        ],
+        "score": -24,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-02",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "turn",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 94.99514143949946,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "largest turn 95 deg (need >= 45.0)",
+      "evidence": {
+        "action": "turn",
+        "event_kind": "turn",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "turn",
+            "start": 0,
+            "end": 30,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -94.99514143949946,
+              "peak_rate_deg_s": 141.8817264752925
+            },
+            "start_s": 0.0,
+            "end_s": 1.5
+          }
+        ],
+        "max_turn_deg": 94.99514143949946,
+        "score": 94.99514143949946,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-02",
+      "requirement_index": 1,
+      "requirement_type": "turn_direction",
+      "expected_value": "right",
+      "evaluator": "RotationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 94.99514143949946,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "dominant turn -95 deg (right); required right >= 45 deg",
+      "evidence": {
+        "n_turn_events": 1,
+        "dominant_yaw_change_deg": -94.99514143949946,
+        "dominant_turn": {
+          "kind": "turn",
+          "start": 0,
+          "end": 30,
+          "side": "right",
+          "attrs": {
+            "yaw_change_deg": -94.99514143949946,
+            "peak_rate_deg_s": 141.8817264752925
+          },
+          "start_s": 0.0,
+          "end_s": 1.5
+        },
+        "net_yaw_change_deg": -137.61325686166452,
+        "turn_events": [
+          {
+            "kind": "turn",
+            "start": 0,
+            "end": 30,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -94.99514143949946,
+              "peak_rate_deg_s": 141.8817264752925
+            },
+            "start_s": 0.0,
+            "end_s": 1.5
+          }
+        ],
+        "score": 94.99514143949946,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-02",
+      "requirement_index": 2,
+      "requirement_type": "action",
+      "expected_value": "jump",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "2 jump event(s) detected",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "n_events": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 48,
+            "end": 55,
+            "side": null,
+            "attrs": {
+              "flight_frames": 7,
+              "peak_clearance_m": 0.09863447472453117,
+              "pelvis_rise_m": 0.1401592195034025
+            },
+            "start_s": 2.4,
+            "end_s": 2.75
+          },
+          {
+            "kind": "jump",
+            "start": 61,
+            "end": 69,
+            "side": null,
+            "attrs": {
+              "flight_frames": 8,
+              "peak_clearance_m": 0.1086829386651516,
+              "pelvis_rise_m": 0.12547530531883244
+            },
+            "start_s": 3.05,
+            "end_s": 3.45
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-02",
+      "requirement_index": 3,
+      "requirement_type": "count",
+      "expected_value": 1,
+      "evaluator": "CountEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "jump: detected 2, required 1",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "body_side": null,
+        "detected_count": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 48,
+            "end": 55,
+            "side": null,
+            "attrs": {
+              "flight_frames": 7,
+              "peak_clearance_m": 0.09863447472453117,
+              "pelvis_rise_m": 0.1401592195034025
+            },
+            "start_s": 2.4,
+            "end_s": 2.75
+          },
+          {
+            "kind": "jump",
+            "start": 61,
+            "end": 69,
+            "side": null,
+            "attrs": {
+              "flight_frames": 8,
+              "peak_clearance_m": 0.1086829386651516,
+              "pelvis_rise_m": 0.12547530531883244
+            },
+            "start_s": 3.05,
+            "end_s": 3.45
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-02",
+      "requirement_index": 4,
+      "requirement_type": "order",
+      "expected_value": [
+        "turn",
+        "jump"
+      ],
+      "evaluator": "OrderEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 48,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "first occurrences: turn@0.00s -> jump@2.40s",
+      "evidence": {
+        "steps": [
+          {
+            "event": "turn",
+            "event_kind": "turn",
+            "n_events": 1,
+            "first_start": 0,
+            "first_end": 30
+          },
+          {
+            "event": "jump",
+            "event_kind": "jump",
+            "n_events": 2,
+            "first_start": 48,
+            "first_end": 55
+          }
+        ],
+        "missing": [],
+        "start_gaps_frames": [
+          48
+        ],
+        "score": 48,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-09",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "jump",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "2 jump event(s) detected",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "n_events": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 17,
+            "end": 33,
+            "side": null,
+            "attrs": {
+              "flight_frames": 16,
+              "peak_clearance_m": 0.7466967634856702,
+              "pelvis_rise_m": 0.7374673843383788
+            },
+            "start_s": 0.85,
+            "end_s": 1.65
+          },
+          {
+            "kind": "jump",
+            "start": 62,
+            "end": 72,
+            "side": null,
+            "attrs": {
+              "flight_frames": 10,
+              "peak_clearance_m": 0.2656647376716137,
+              "pelvis_rise_m": 0.3084684133529665
+            },
+            "start_s": 3.1,
+            "end_s": 3.6
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-09",
+      "requirement_index": 1,
+      "requirement_type": "count",
+      "expected_value": 2,
+      "evaluator": "CountEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "jump: detected 2, required 2",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "body_side": null,
+        "detected_count": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 17,
+            "end": 33,
+            "side": null,
+            "attrs": {
+              "flight_frames": 16,
+              "peak_clearance_m": 0.7466967634856702,
+              "pelvis_rise_m": 0.7374673843383788
+            },
+            "start_s": 0.85,
+            "end_s": 1.65
+          },
+          {
+            "kind": "jump",
+            "start": 62,
+            "end": 72,
+            "side": null,
+            "attrs": {
+              "flight_frames": 10,
+              "peak_clearance_m": 0.2656647376716137,
+              "pelvis_rise_m": 0.3084684133529665
+            },
+            "start_s": 3.1,
+            "end_s": 3.6
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-10",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "jump",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "2 jump event(s) detected",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "n_events": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 14,
+            "end": 28,
+            "side": null,
+            "attrs": {
+              "flight_frames": 14,
+              "peak_clearance_m": 0.5024651452898979,
+              "pelvis_rise_m": 0.5620543837547303
+            },
+            "start_s": 0.7,
+            "end_s": 1.4
+          },
+          {
+            "kind": "jump",
+            "start": 64,
+            "end": 75,
+            "side": null,
+            "attrs": {
+              "flight_frames": 11,
+              "peak_clearance_m": 0.31239085048437115,
+              "pelvis_rise_m": 0.34812670946121216
+            },
+            "start_s": 3.2,
+            "end_s": 3.75
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-10",
+      "requirement_index": 1,
+      "requirement_type": "count",
+      "expected_value": 3,
+      "evaluator": "CountEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 2,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "jump: detected 2, required 3",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "body_side": null,
+        "detected_count": 2,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 14,
+            "end": 28,
+            "side": null,
+            "attrs": {
+              "flight_frames": 14,
+              "peak_clearance_m": 0.5024651452898979,
+              "pelvis_rise_m": 0.5620543837547303
+            },
+            "start_s": 0.7,
+            "end_s": 1.4
+          },
+          {
+            "kind": "jump",
+            "start": 64,
+            "end": 75,
+            "side": null,
+            "attrs": {
+              "flight_frames": 11,
+              "peak_clearance_m": 0.31239085048437115,
+              "pelvis_rise_m": 0.34812670946121216
+            },
+            "start_s": 3.2,
+            "end_s": 3.75
+          }
+        ],
+        "score": 2,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-19",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.0,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": false,
+      "reason": "longest walk 0.0 s, 0.00 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 0,
+        "events": [],
+        "longest_walk_s": 0.0,
+        "longest_walk_distance_m": 0.0,
+        "score": 0.0,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-19",
+      "requirement_index": 1,
+      "requirement_type": "direction",
+      "expected_value": "forward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.9906951214259573,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "body frame (ref frame 0): right +0.03 m, forward +0.99 m; required forward >= 0.5 m",
+      "evidence": {
+        "window": [
+          0,
+          100
+        ],
+        "window_source": "whole_clip",
+        "reference_frame": 0,
+        "reference_yaw_deg": -0.274197363731317,
+        "step": null,
+        "lateral_right_m": 0.029881472957027987,
+        "forward_m": 0.9906951214259573,
+        "world_dx_m": 0.03823431208729744,
+        "world_dz_m": 0.9919562935829163,
+        "required_displacement_m": 0.9906951214259573,
+        "score": 0.9906951214259573,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-19",
+      "requirement_index": 2,
+      "requirement_type": "action",
+      "expected_value": "raise_hand",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "1 raise_hand event(s) detected",
+      "evidence": {
+        "action": "raise_hand",
+        "event_kind": "raise_hand",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "raise_hand",
+            "start": 81,
+            "end": 95,
+            "side": "right",
+            "attrs": {
+              "peak_wrist_above_shoulder_m": 0.15765354633331286
+            },
+            "start_s": 4.05,
+            "end_s": 4.75
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-19",
+      "requirement_index": 3,
+      "requirement_type": "body_side",
+      "expected_value": "right",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.6657348864549085,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "arm: A_left=0.32, A_right=1.61, LI=-0.67 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted right, required right",
+      "evidence": {
+        "limb_used": "arm",
+        "left_activity": 0.3224748252401964,
+        "right_activity": 1.6069806608488104,
+        "laterality_index": -0.6657348864549085,
+        "raw_side": "right",
+        "limb_length_m": 0.5229455406274146,
+        "left_detail": {
+          "activity": 0.3224748252401964,
+          "peak_deviation": 0.37506993694949026,
+          "peak_rise": 0.10874293014832372,
+          "peak_horizontal": 0.3066203746747222
+        },
+        "right_detail": {
+          "activity": 1.6069806608488104,
+          "peak_deviation": 1.6650363584368915,
+          "peak_rise": 1.2738528922906982,
+          "peak_horizontal": 0.9924781727537578
+        },
+        "all_limbs": {
+          "left_arm": 0.3224748252401964,
+          "right_arm": 1.6069806608488104,
+          "left_leg": 0.27531131590072355,
+          "right_leg": 0.3225214344042115
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C4-19",
+      "requirement_index": 4,
+      "requirement_type": "simultaneous",
+      "expected_value": [
+        "walk",
+        "raise"
+      ],
+      "evaluator": "SimultaneousEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.0,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": false,
+      "reason": "not detected: ['walk']",
+      "evidence": {
+        "groups": [
+          {
+            "event": "walk",
+            "event_kind": "walk",
+            "n_events": 0,
+            "events": []
+          },
+          {
+            "event": "raise",
+            "event_kind": "raise_hand",
+            "n_events": 1,
+            "events": [
+              {
+                "kind": "raise_hand",
+                "start": 81,
+                "end": 95,
+                "side": "right",
+                "attrs": {
+                  "peak_wrist_above_shoulder_m": 0.15765354633331286
+                },
+                "start_s": 4.05,
+                "end_s": 4.75
+              }
+            ]
+          }
+        ],
+        "missing": [
+          "walk"
+        ],
+        "best_overlap_ratio": 0.0,
+        "best_combination": null,
+        "score": 0.0,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 0,
+      "requirement_type": "action",
+      "expected_value": "turn",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 53.32072876874016,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "largest turn 53 deg (need >= 45.0)",
+      "evidence": {
+        "action": "turn",
+        "event_kind": "turn",
+        "n_events": 2,
+        "events": [
+          {
+            "kind": "turn",
+            "start": 0,
+            "end": 21,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -53.32072876874016,
+              "peak_rate_deg_s": 108.30618827642056
+            },
+            "start_s": 0.0,
+            "end_s": 1.05
+          },
+          {
+            "kind": "turn",
+            "start": 72,
+            "end": 91,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -46.893872210533914,
+              "peak_rate_deg_s": 84.70068797291005
+            },
+            "start_s": 3.6,
+            "end_s": 4.55
+          }
+        ],
+        "max_turn_deg": 53.32072876874016,
+        "score": 53.32072876874016,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 1,
+      "requirement_type": "turn_direction",
+      "expected_value": "right",
+      "evaluator": "RotationEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 53.32072876874016,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "dominant turn -53 deg (right); required right >= 45 deg",
+      "evidence": {
+        "n_turn_events": 2,
+        "dominant_yaw_change_deg": -53.32072876874016,
+        "dominant_turn": {
+          "kind": "turn",
+          "start": 0,
+          "end": 21,
+          "side": "right",
+          "attrs": {
+            "yaw_change_deg": -53.32072876874016,
+            "peak_rate_deg_s": 108.30618827642056
+          },
+          "start_s": 0.0,
+          "end_s": 1.05
+        },
+        "net_yaw_change_deg": -106.06831642723037,
+        "turn_events": [
+          {
+            "kind": "turn",
+            "start": 0,
+            "end": 21,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -53.32072876874016,
+              "peak_rate_deg_s": 108.30618827642056
+            },
+            "start_s": 0.0,
+            "end_s": 1.05
+          },
+          {
+            "kind": "turn",
+            "start": 72,
+            "end": 91,
+            "side": "right",
+            "attrs": {
+              "yaw_change_deg": -46.893872210533914,
+              "peak_rate_deg_s": 84.70068797291005
+            },
+            "start_s": 3.6,
+            "end_s": 4.55
+          }
+        ],
+        "score": 53.32072876874016,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 2,
+      "requirement_type": "action",
+      "expected_value": "walk",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.0,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "longest walk 0.0 s, 0.00 m",
+      "evidence": {
+        "action": "walk",
+        "event_kind": "walk",
+        "n_events": 0,
+        "events": [],
+        "longest_walk_s": 0.0,
+        "longest_walk_distance_m": 0.0,
+        "score": 0.0,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 3,
+      "requirement_type": "direction",
+      "expected_value": "forward",
+      "evaluator": "BodyFrameDirectionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": -0.1545182218602913,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "body frame (ref frame 0): right +0.73 m, forward -0.15 m; required forward >= 0.5 m",
+      "evidence": {
+        "window": [
+          0,
+          100
+        ],
+        "window_source": "whole_clip",
+        "reference_frame": 0,
+        "reference_yaw_deg": 5.657139112445087,
+        "step": 1,
+        "lateral_right_m": 0.7283840854226733,
+        "forward_m": -0.1545182218602913,
+        "world_dx_m": 0.7399356961250305,
+        "world_dz_m": -0.06687246263027191,
+        "required_displacement_m": -0.1545182218602913,
+        "score": -0.1545182218602913,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 4,
+      "requirement_type": "action",
+      "expected_value": "jump",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "1 jump event(s) detected",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 78,
+            "end": 90,
+            "side": null,
+            "attrs": {
+              "flight_frames": 12,
+              "peak_clearance_m": 0.2599275067448616,
+              "pelvis_rise_m": 0.333791470527649
+            },
+            "start_s": 3.9,
+            "end_s": 4.5
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 5,
+      "requirement_type": "count",
+      "expected_value": 1,
+      "evaluator": "CountEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "jump: detected 1, required 1",
+      "evidence": {
+        "action": "jump",
+        "event_kind": "jump",
+        "body_side": null,
+        "detected_count": 1,
+        "events": [
+          {
+            "kind": "jump",
+            "start": 78,
+            "end": 90,
+            "side": null,
+            "attrs": {
+              "flight_frames": 12,
+              "peak_clearance_m": 0.2599275067448616,
+              "pelvis_rise_m": 0.333791470527649
+            },
+            "start_s": 3.9,
+            "end_s": 4.5
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 6,
+      "requirement_type": "action",
+      "expected_value": "raise_hands",
+      "evaluator": "ActionEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 1,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": false,
+      "reason": "1 raise_hands event(s) detected",
+      "evidence": {
+        "action": "raise_hands",
+        "event_kind": "raise_hands",
+        "n_events": 1,
+        "events": [
+          {
+            "kind": "raise_hands",
+            "start": 0,
+            "end": 6,
+            "side": "both",
+            "attrs": {},
+            "start_s": 0.0,
+            "end_s": 0.3
+          }
+        ],
+        "score": 1,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 7,
+      "requirement_type": "body_side",
+      "expected_value": "both",
+      "evaluator": "BodySideEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "PASS",
+      "score": 0.9644118357986855,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "PASS",
+      "match": true,
+      "reason": "arm: A_left=1.56, A_right=1.62, LI=-0.02 (min_activity=0.7, side_margin=0.25, both_max_imbalance=0.5) -> predicted both, required both",
+      "evidence": {
+        "limb_used": "arm",
+        "left_activity": 1.5617911353761174,
+        "right_activity": 1.6194234427688325,
+        "laterality_index": -0.0181164476007015,
+        "raw_side": "right",
+        "limb_length_m": 0.5205590636273825,
+        "left_detail": {
+          "activity": 1.5617911353761174,
+          "peak_deviation": 1.5920810358689905,
+          "peak_rise": 1.2485030611863246,
+          "peak_horizontal": 0.9508298617532915
+        },
+        "right_detail": {
+          "activity": 1.6194234427688325,
+          "peak_deviation": 1.6793673178807897,
+          "peak_rise": 1.1950351964147539,
+          "peak_horizontal": 1.0487066550937807
+        },
+        "all_limbs": {
+          "left_arm": 1.5617911353761174,
+          "right_arm": 1.6194234427688325,
+          "left_leg": 0.3115633140180937,
+          "right_leg": 0.3286506747683155
+        }
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 8,
+      "requirement_type": "simultaneous",
+      "expected_value": [
+        "jump",
+        "hands"
+      ],
+      "evaluator": "SimultaneousEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": 0.0,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "best overlap 0% of the shorter event (need 50%)",
+      "evidence": {
+        "groups": [
+          {
+            "event": "jump",
+            "event_kind": "jump",
+            "n_events": 1,
+            "events": [
+              {
+                "kind": "jump",
+                "start": 78,
+                "end": 90,
+                "side": null,
+                "attrs": {
+                  "flight_frames": 12,
+                  "peak_clearance_m": 0.2599275067448616,
+                  "pelvis_rise_m": 0.333791470527649
+                },
+                "start_s": 3.9,
+                "end_s": 4.5
+              }
+            ]
+          },
+          {
+            "event": "hands",
+            "event_kind": "raise_hands",
+            "n_events": 1,
+            "events": [
+              {
+                "kind": "raise_hands",
+                "start": 0,
+                "end": 6,
+                "side": "both",
+                "attrs": {},
+                "start_s": 0.0,
+                "end_s": 0.3
+              }
+            ]
+          }
+        ],
+        "missing": [],
+        "best_overlap_ratio": 0.0,
+        "best_combination": null,
+        "score": 0.0,
+        "judge": "rule"
+      }
+    },
+    {
+      "model": "LightT2M",
+      "prompt_id": "C5-16",
+      "requirement_index": 9,
+      "requirement_type": "order",
+      "expected_value": [
+        "turn",
+        "walk",
+        "jump"
+      ],
+      "evaluator": "OrderEvaluator",
+      "status": "EVALUATED",
+      "pass_fail": "FAIL",
+      "score": null,
+      "threshold_status": "provisional_not_frozen",
+      "human_label": "FAIL",
+      "match": true,
+      "reason": "not detected: ['walk']",
+      "evidence": {
+        "steps": [
+          {
+            "event": "turn",
+            "event_kind": "turn",
+            "n_events": 2,
+            "first_start": 0,
+            "first_end": 21
+          },
+          {
+            "event": "walk",
+            "event_kind": "walk",
+            "n_events": 0,
+            "first_start": null,
+            "first_end": null
+          },
+          {
+            "event": "jump",
+            "event_kind": "jump",
+            "n_events": 1,
+            "first_start": 78,
+            "first_end": 90
+          }
+        ],
+        "missing": [
+          "walk"
+        ],
+        "start_gaps_frames": [],
+        "score": null,
+        "judge": "rule"
+      }
+    }
+  ]
+}
