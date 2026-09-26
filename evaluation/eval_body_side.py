@@ -31,11 +31,11 @@ Method
 
 * Laterality index  LI = (A_left - A_right) / (A_left + A_right).
 
-* Limb (arm / leg): explicit requirement field -> nearest preceding action
+* Limb (arm / leg): explicit requirement field -> applies_to (v1.2) -> nearest preceding action
   requirement (kick -> leg, reach / raise_hand -> arm) -> sibling
   leg_direction / arm_direction -> words in the prompt -> "auto".
 
-Decision (thresholds calibrated against Human Gold, STEP 11B)
+Decision (thresholds calibrated against Human Gold in analysis/analysis_rules.ipynb)
 --------
   left : A_left  >= min_activity and LI >=  side_margin
   right: A_right >= min_activity and LI <= -side_margin
@@ -95,7 +95,7 @@ class BodySideEvaluator(BaseEvaluator):
     }
 
     # Current rule used by run_benchmark.ipynb (run_all_evaluators).
-    # After calibrating in evaluation/analysis/analysis_body_side.ipynb, copy the
+    # After calibrating in evaluation/analysis/analysis_rules.ipynb, copy the
     # selected values here and update the status (e.g. "frozen_v1.0").
     CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
     CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
@@ -149,6 +149,17 @@ class BodySideEvaluator(BaseEvaluator):
                     return limb, f"requirement.{key}"
 
         requirements = (evaluation_case or {}).get("requirements", [])
+
+        # (a2) explicit applies_to (definition v1.2+): the action(s) it refers to
+        targets = requirement.get("applies_to") or []
+        if targets:
+            by_id = {r.get("id"): r for r in requirements}
+            for rid in targets:
+                r = by_id.get(rid)
+                if r and r.get("type") == "action":
+                    limb = self._limb_from_words(r.get("value", r.get("expected", "")))
+                    if limb:
+                        return limb, f"applies_to:{rid}={r.get('value')}"
 
         # (b) nearest preceding action Requirement
         index = next((i for i, r in enumerate(requirements) if r is requirement), None)
@@ -286,6 +297,12 @@ class BodySideEvaluator(BaseEvaluator):
             f"-> predicted {predicted}, required {required_side}"
         )
         return ("PASS" if passed else "FAIL"), predicted, reason
+
+    def decide_from_evidence(self, evidence, expected):
+        """Unified calibration hook (validation.grid_search, finalize.redecide):
+        decision from saved evidence with self.thresholds. Returns (pass_fail, reason)."""
+        pass_fail, _, reason = self.decide(str(expected).lower().strip(), evidence, self.thresholds)
+        return pass_fail, reason
 
     # --------------------------------------------------------
     # 4. Common Evaluator Interface

@@ -38,7 +38,7 @@ DEFAULT_FPS = 20.0
 # Requirement Type -> Evaluator mapping (STEP 8)
 EVALUATION_CONFIG = {
     "action": "ActionEvaluator",
-    "direction": "TrajectoryEvaluator",
+    "direction": "BodyFrameDirectionEvaluator",   # body frame (eval_trajectory_ext.py); world frame: "TrajectoryEvaluator"
     "torso_direction": "TorsoGeometryEvaluator",
     "body_side": "BodySideEvaluator",
     "arm_direction": "LimbGeometryEvaluator",

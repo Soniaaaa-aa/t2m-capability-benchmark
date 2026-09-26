@@ -16,8 +16,9 @@ Plus, at the end of the file (added, original classes untouched):
 
 TODO (owner, optional): TrajectoryEvaluator itself does not follow the common
 interface (no BaseEvaluator, signature evaluate(motion, required_direction)).
-Once it does, the wrapper can be removed. Calibration workflow:
-evaluation/analysis/analysis_direction.ipynb.
+Once it does, the wrapper can be removed.
+Since 2026-09-26 the default direction rule is BodyFrameDirectionEvaluator
+(eval_trajectory_ext.py); this world-frame rule is kept for comparison.
 """
 
 import numpy as np

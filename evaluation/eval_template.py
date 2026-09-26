@@ -10,8 +10,9 @@ eval_template.py — copy this file to start a new evaluator
 3. Uncomment register_evaluator(...) at the bottom. The name must match
    EVALUATION_CONFIG in evaluation/common.py (change common.py only via a
    reviewed PR).
-4. Optional: your own calibration notebook evaluation/analysis/analysis_<name>.ipynb
-   (copy analysis_body_side.ipynb) and tests/test_<name>.py.
+4. Calibration happens in evaluation/analysis/analysis_rules.ipynb: add a grid for
+   your evaluator to GRIDS there. It needs decide_from_evidence(evidence, expected);
+   subclassing rule_base.RuleEvaluator (recommended) provides it. Optional tests/test_<name>.py.
 
 This template file itself is skipped by the automatic import.
 """
