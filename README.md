@@ -16,13 +16,23 @@ t2m-benchmark/
 ├── evaluation/                    # EVALUATION — shared by all models
 │   ├── common.py                  #   settings, input contract, loading, BaseEvaluator/registry,
 │   │                              #   Human Gold helpers, automatic import + unified runner
-│   ├── eval_trajectory.py         #   direction  → TrajectoryEvaluator   (member A)
-│   ├── eval_body_side.py          #   body_side  → BodySideEvaluator     (member B)
-│   ├── eval_template.py           #   copy this to start a new evaluator (members C, D)
-│   ├── run_benchmark.ipynb        #   shared runner: load data, run ALL evaluators, save results
-│   └── analysis/                  #   one calibration notebook per evaluator, owned by its author
-│       ├── analysis_direction.ipynb
-│       └── analysis_body_side.ipynb
+│   ├── primitives.py, events.py   #   shared measurements + event detection (walk, turn, jump, …)
+│   ├── rule_base.py               #   RuleEvaluator base class (thresholds, evidence-only mode)
+│   ├── eval_trajectory_ext.py     #   direction (body frame, default) + attribute        (member A)
+│   ├── eval_trajectory.py         #   direction, world frame (TrajectoryEvaluator) — kept for comparison
+│   ├── eval_rotation.py           #   turn_direction                                      (member A)
+│   ├── eval_body_side.py          #   body_side                                           (member B)
+│   ├── eval_limb.py               #   leg / arm / torso direction                         (member B)
+│   ├── eval_spatial.py            #   target, relation                                    (member B)
+│   ├── eval_temporal.py           #   count, order, simultaneous                          (member C)
+│   ├── eval_action.py             #   action (closed vocabulary)                          (member C)
+│   ├── validation.py, finalize.py #   calibration tools; plan B: auto/human, review sheet, final tables
+│   ├── eval_template.py           #   copy this to start a new evaluator
+│   ├── run_benchmark.ipynb        #   Pilot runner per model: load data, run ALL evaluators, labels, save
+│   ├── run_main.ipynb             #   Main: all models, review sheet, final tables
+│   ├── RULES.md                   #   rules, thresholds, workflow, outputs
+│   └── analysis/
+│       └── analysis_rules.ipynb   #   the ONE calibration notebook for every evaluator
 ├── benchmark/                     # benchmark definition JSON — single source of truth for both halves
 ├── labels/                        # Human Gold Labels, one JSON per model
 ├── tests/                         # pytest (synthetic motions in tests/synth_motion.py)
@@ -40,7 +50,7 @@ Every model package is a ZIP containing `<ModelName>/<prompt_id>.npy`:
 | | |
 |---|---|
 | shape | `[T, 22, 3]` (HumanML3D joint order) |
-| frames | `T == target_frames_20fps` of the prompt, 20 fps |
+| frames | 20 fps; length chosen by each model's runner (definition v1.2 prescribes none). MotionHiFlow: Easy 100 / Medium 150 (→148) / Hard 196 |
 | units | metres |
 | axes | `+X` = Right, `+Y` = Up, `+Z` = Forward |
 | origin | ground `Y = 0`, first-frame root `XZ = (0, 0)` |
@@ -54,16 +64,16 @@ enough). STEP 0 clones or pulls this repository and imports `common.py` plus **e
 `evaluation/eval_*.py` automatically**. Set `MODEL_NAME` in STEP 4 and run top to bottom: STEP 10
 runs all implemented evaluators with their current rules, STEP 11 saves JSON + CSV results.
 
-Each evaluator's calibration (evidence vs Human Gold, threshold search, validation) lives in its own
-notebook under `evaluation/analysis/`.
+Calibration of every evaluator (agreement with Human Gold, threshold search, leave-one-model-out,
+auto/human decision) is done once in `evaluation/analysis/analysis_rules.ipynb`; see `evaluation/RULES.md`.
 
 Private repository: create a GitHub fine-grained token (read access to this repo) and add it as a
 Colab secret named `GITHUB_TOKEN`.
 
 ## Working rules
 
-1. **Only edit the files you own**: your `evaluation/eval_<name>.py`, your
-   `evaluation/analysis/analysis_<name>.ipynb`, your `generation/<model>/` folder, your tests.
+1. **Only edit the files you own**: your `evaluation/eval_<name>.py`, your `generation/<model>/`
+   folder, your tests. `analysis/analysis_rules.ipynb` is shared (add your grid via PR).
 2. **Shared files** — `evaluation/common.py`, `evaluation/run_benchmark.ipynb`, `benchmark/` — change
    only through a Pull Request reviewed by the whole team; every evaluator depends on them.
    Adding an evaluator does **not** require changing them.
@@ -99,14 +109,14 @@ To test your branch in Colab before it is merged, set `BRANCH = "feat/..."` in S
    match `EVALUATION_CONFIG` in `evaluation/common.py`.
 3. Put the rule you want the benchmark to use in `CURRENT_THRESHOLDS` / `CURRENT_THRESHOLD_STATUS`
    (`for_benchmark()` returns the evaluator configured with them).
-4. Optional: `evaluation/analysis/analysis_<name>.ipynb` for calibration (copy
-   `analysis_body_side.ipynb`) and `tests/test_<name>.py`.
+4. Calibration: subclass `RuleEvaluator` (it provides `decide_from_evidence`) and add a grid for your
+   evaluator to `GRIDS` in `evaluation/analysis/analysis_rules.ipynb`. Optional `tests/test_<name>.py`.
 5. Open a Pull Request. Once merged, STEP 0 imports the file and STEP 10 runs it automatically.
 
 ### Changing a threshold
 
-Calibrate in your analysis notebook, then update `CURRENT_*` in your `eval_<name>.py` through a
-Pull Request. The results file saved in STEP 11 records the rules and the framework commit used.
+Calibrate in `evaluation/analysis/analysis_rules.ipynb`, then update `CURRENT_*` in your `eval_<name>.py`
+through a Pull Request. The results file saved in STEP 11 records the rules and the framework commit used.
 
 Developing in a Colab notebook is fine — when it works, copy only the class (and helper functions)
 into your `eval_<name>.py`. Do not use Colab's "Download .py" output as-is: it contains every cell,
@@ -119,7 +129,8 @@ Create `generation/<model>/` with the code that produces the ZIP above, reading 
 
 ### Human Gold Labels
 
-Created in STEP 9D/9E of the notebook and stored as `labels/<Model>_pilot_human_gold_labels.json`.
+Watch the GIFs each model's runner produces (`<Model>_gifs_<split>.zip`, see `generation/README.md`),
+then create labels in STEP 9D/9E of the notebook and stored as `labels/<Model>_pilot_human_gold_labels.json`.
 Add the file via a Pull Request so that every member calibrates against the same labels. Labels are
 checked against the benchmark definition when loaded; labels made for an older definition raise an
 error instead of being used silently.
@@ -136,7 +147,9 @@ error instead of being used silently.
 - Fixed: Df5 STEP 6/7 used `SELECTED_MODEL` / `MOTION_INPUT_DIR`, which STEP 4 never defined
   (NameError on a fresh runtime). Now `MODEL_NAME` / `MODEL_INPUT_DIR` throughout.
 - `SUPPORTED_REQUIREMENT_TYPES` is now derived from `EVALUATION_CONFIG` (the old list disagreed with it).
-- Df5 STEP 10A–10F now live in `evaluation/analysis/analysis_direction.ipynb` (unchanged).
+- Df5 STEP 10A–10F lived in `evaluation/analysis/analysis_direction.ipynb` until 2026-09-26; direction is
+  now judged in the body frame and calibrated in `analysis_rules.ipynb` with all other evaluators
+  (the old notebook is in the Git history).
 - `TrajectoryEvaluator` does not follow the common interface itself, so a small wrapper
   (`TrajectoryRequirementEvaluator`, appended to `eval_trajectory.py`; original classes untouched)
   registers it for the unified runner with the STEP 10D rule (0.50 m, not frozen). Verified: the
