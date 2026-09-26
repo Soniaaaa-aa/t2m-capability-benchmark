@@ -84,3 +84,4 @@ def test_registry_rejects_non_evaluator():
         common.register_evaluator("X", NotAnEvaluator)
     with pytest.raises(KeyError):
         common.get_evaluator("DoesNotExist")
+

@@ -137,3 +137,30 @@ def test_pilot_workflow_helpers(tmp_path):
     final = bs.evaluate_body_side(cases, cal["thresholds"], cal["status"], labels)
     assert all(r["pass_fail"] == r["human_label"] for r in final)
     assert bs.calibrate_body_side_thresholds([dict(r, human_label=None) for r in rows])["status"] == "provisional"
+
+
+def test_applies_to_takes_precedence(ev):
+    """v1.2 definitions link requirements explicitly; that link must win over proximity."""
+    reqs = [{"id": "r1", "type": "action", "value": "kick"},
+            {"id": "r2", "type": "action", "value": "raise_hand"},
+            {"id": "r3", "type": "body_side", "value": "left", "applies_to": ["r1"]}]
+    r = ev.evaluate(sm.standardise(sm.side_kick("left")), reqs[2], case("", reqs))
+    assert r["limb"] == "leg" and r["limb_source"] == "applies_to:r1=kick"
+    assert r["pass_fail"] == "PASS"
+
+
+def test_v12_pilot_limbs():
+    """Every body_side requirement in the v1.2 Pilot resolves its limb via applies_to."""
+    import json
+    from pathlib import Path
+    path = Path(__file__).resolve().parents[1] / "benchmark" / "pilot_benchmark_definition.json"
+    if not path.exists():
+        pytest.skip("benchmark definition not in repo")
+    ev = bs.BodySideEvaluator()
+    expected = {"C2-09": "leg", "C2-10": "leg", "C2-19": "arm", "C2-20": "arm", "C4-19": "arm", "C5-16": "arm"}
+    for p in json.loads(path.read_text())["prompts"]:
+        for req in p["requirements"]:
+            if req["type"] == "body_side":
+                limb, source = ev.infer_limb(req, {"prompt": p["text"], "requirements": p["requirements"]})
+                assert limb == expected[p["prompt_id"]], p["prompt_id"]
+                assert source.startswith("applies_to"), (p["prompt_id"], source)

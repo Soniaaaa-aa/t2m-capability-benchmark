@@ -64,15 +64,28 @@ def test_run_all_evaluators(tmp_path):
     assert len(rows) == sum(len(c["requirements"]) for c in cases)
     by = {(r["prompt_id"], r["requirement_type"]): r for r in rows}
     assert by[("C1-01", "direction")]["pass_fail"] == "PASS"
-    assert by[("C2-01", "direction")]["pass_fail"] == "PASS"
-    assert by[("C2-01", "direction")]["match"] is False            # human said FAIL
+    # C2-01 motion: the whole scene is rotated, so the person walks FORWARD in their own
+    # frame. Body-frame direction (default since 2026-09-26) says "not left".
+    assert by[("C2-01", "direction")]["evaluator"] == "BodyFrameDirectionEvaluator"
+    assert by[("C2-01", "direction")]["pass_fail"] == "FAIL"
+    assert by[("C2-01", "direction")]["match"] is True             # human said FAIL
     assert by[("C2-09", "body_side")]["pass_fail"] == "PASS"
     assert by[("C2-09", "body_side")]["match"] is True
-    assert by[("C1-06", "turn_direction")]["status"] == "NOT_IMPLEMENTED"
-    assert by[("C1-01", "action")]["status"] == "NOT_IMPLEMENTED"
+    # C1-06 motion is a rest pose: turn_direction is now evaluated (and fails).
+    assert by[("C1-06", "turn_direction")]["status"] == "EVALUATED"
+    assert by[("C1-06", "turn_direction")]["pass_fail"] == "FAIL"
+    # A mapped evaluator that nobody has written yet is still reported, not raised.
+    rows_missing = common.run_all_evaluators(cases[:1], None, config={"action": "NotWrittenYet"})
+    assert rows_missing[0]["status"] == "NOT_IMPLEMENTED"
 
     summary = common.summarize_results(rows, verbose=False)
-    assert summary["direction"]["PASS"] == 2 and summary["direction"]["agree"] == 1
+    assert summary["direction"]["PASS"] == 1 and summary["direction"]["agree"] == 2
+
+    # A's world-frame rule is still available on request
+    world = common.run_all_evaluators(cases, labels, config={**common.EVALUATION_CONFIG,
+                                                             "direction": "TrajectoryEvaluator"})
+    wby = {(r["prompt_id"], r["requirement_type"]): r for r in world}
+    assert wby[("C2-01", "direction")]["pass_fail"] == "PASS"
 
 
 def test_direction_wrapper_equals_original_rule(tmp_path):
