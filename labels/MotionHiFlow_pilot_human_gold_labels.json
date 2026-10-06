@@ -393,7 +393,7 @@
         "type": "simultaneous",
         "value": [
           "walk",
-          "raise_hand"
+          "raise"
         ],
         "human_label": "FAIL"
       }
@@ -441,7 +441,7 @@
       {
         "requirement_index": 6,
         "type": "action",
-        "value": "raise_hand",
+        "value": "raise_hands",
         "human_label": "PASS"
       },
       {
@@ -455,7 +455,7 @@
         "type": "simultaneous",
         "value": [
           "jump",
-          "raise_hand"
+          "hands"
         ],
         "human_label": "PASS"
       },
