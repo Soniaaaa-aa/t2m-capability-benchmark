@@ -96,9 +96,11 @@ class AttributeEvaluator(RuleEvaluator):
 
     @classmethod
     def for_benchmark(cls):
-        # Use whatever benchmark file is active for this run; falls back
-        # to DEFAULT_DEFINITION if the notebook never set one.
-        return cls(definition_path=_ACTIVE_DEFINITION_PATH)
+    return cls(
+        thresholds=cls.CURRENT_THRESHOLDS,
+        threshold_status=cls.CURRENT_THRESHOLD_STATUS,
+        definition_path=_ACTIVE_DEFINITION_PATH,
+    )
 
     def find_partner(self, case, value):
         pairs = _pairs(self.definition_path)
