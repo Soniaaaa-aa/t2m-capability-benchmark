@@ -44,6 +44,15 @@ from rule_base import current, verdict
 RuleEvaluator = current()   # base class bound to the loaded common.py (safe after reload)
 
 DEFAULT_DEFINITION = Path(__file__).resolve().parent.parent / "benchmark" / "pilot_benchmark_definition.json"
+
+# NEW: lets the notebook tell AttributeEvaluator which benchmark file
+# is actually in use for this run, instead of relying on a fixed
+# filename inside the repo that can drift out of sync.
+_ACTIVE_DEFINITION_PATH = None
+
+def set_active_benchmark_path(path):
+    global _ACTIVE_DEFINITION_PATH
+    _ACTIVE_DEFINITION_PATH = str(path)
 OPPOSITE = {"slow": "fast", "fast": "slow", "slowly": "fast", "quickly": "slow", "quick": "slow"}
 SPEED_WORDS = {"slow": "slow", "slowly": "slow", "fast": "fast", "quickly": "fast", "quick": "fast"}
 
