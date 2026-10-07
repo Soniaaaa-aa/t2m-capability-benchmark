@@ -120,7 +120,7 @@
         "requirement_index": 2,
         "type": "leg_direction",
         "value": "side",
-        "human_label": "PASS"
+        "human_label": "FAIL"
       }
     ]
   },
@@ -143,7 +143,7 @@
         "requirement_index": 2,
         "type": "leg_direction",
         "value": "side",
-        "human_label": "PASS"
+        "human_label": "FAIL"
       }
     ]
   },
