@@ -94,6 +94,12 @@ class AttributeEvaluator(RuleEvaluator):
         super().__init__(*args, **kwargs)
         self.definition_path = str(definition_path or DEFAULT_DEFINITION)
 
+    @classmethod
+    def for_benchmark(cls):
+        # Use whatever benchmark file is active for this run; falls back
+        # to DEFAULT_DEFINITION if the notebook never set one.
+        return cls(definition_path=_ACTIVE_DEFINITION_PATH)
+
     def find_partner(self, case, value):
         pairs = _pairs(self.definition_path)
         pid = case.get("prompt_id")
