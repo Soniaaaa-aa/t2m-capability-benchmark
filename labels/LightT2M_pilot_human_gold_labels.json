@@ -241,13 +241,13 @@
         "requirement_index": 1,
         "type": "direction",
         "value": "forward",
-        "human_label": "PASS"
+        "human_label": "FAIL"
       },
       {
         "requirement_index": 2,
         "type": "attribute",
         "value": "fast",
-        "human_label": "PASS"
+        "human_label": "FAIL"
       }
     ]
   },
