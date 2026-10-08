@@ -97,8 +97,8 @@ class BodySideEvaluator(BaseEvaluator):
     # Current rule used by run_benchmark.ipynb (run_all_evaluators).
     # After calibrating in evaluation/analysis/analysis_rules.ipynb, copy the
     # selected values here and update the status (e.g. "frozen_v1.0").
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+    CURRENT_THRESHOLDS = {"min_activity": 0.9, "side_margin": 0.25, "both_max_imbalance": 0.5}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     @classmethod
     def for_benchmark(cls):
