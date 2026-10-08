@@ -41,8 +41,9 @@ class ActionEvaluator(RuleEvaluator):
         "turn_min_deg": 45.0,
         "min_events": 1,
     }
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+ 
+    CURRENT_THRESHOLDS = {"walk_min_duration_s": 1.0, "walk_min_distance_m": 0.5, "turn_min_deg": 45.0, "min_events": 1}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         action = str(self.expected_of(requirement)).lower()
