@@ -1,0 +1,439 @@
+{
+  "created_utc": "2026-10-08T17:33:57+00:00",
+  "framework_commit": "9ce9b9f",
+  "models": [
+    "LightT2M",
+    "MoLingo",
+    "MoMADiff",
+    "MotionHiFlow"
+  ],
+  "synthetic_negatives": true,
+  "policy": {
+    "kappa_gate": 0.6,
+    "min_n": 10,
+    "min_human_fail": 3,
+    "min_human_pass": 3,
+    "min_real_agreement": 0.8,
+    "min_real_n": 1
+  },
+  "types": {
+    "action": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 94,
+        "agreement": 0.8617021276595744,
+        "kappa": 0.4409881061299176,
+        "n_human_fail": 16,
+        "n_human_pass": 78
+      },
+      "synthetic": {
+        "n": 78,
+        "agreement": 0.9615384615384616,
+        "kappa": 0.0,
+        "n_human_fail": 78,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 172,
+        "agreement": 0.9069767441860465,
+        "kappa": 0.8139534883720929,
+        "n_human_fail": 94,
+        "n_human_pass": 78
+      }
+    },
+    "arm_direction": {
+      "mode": "human",
+      "reason": "only 0 real Pilot labels; n=0 < 10; only 0 FAIL labels; only 0 PASS labels; kappa=None < 0.6; real agreement=None < 0.8",
+      "real": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      },
+      "synthetic": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      }
+    },
+    "attribute": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 8,
+        "agreement": 0.875,
+        "kappa": 0.6,
+        "n_human_fail": 1,
+        "n_human_pass": 7
+      },
+      "synthetic": {
+        "n": 7,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 7,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 15,
+        "agreement": 0.9333333333333333,
+        "kappa": 0.8648648648648649,
+        "n_human_fail": 8,
+        "n_human_pass": 7
+      }
+    },
+    "body_side": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 24,
+        "agreement": 0.9166666666666666,
+        "kappa": 0.625,
+        "n_human_fail": 2,
+        "n_human_pass": 22
+      },
+      "synthetic": {
+        "n": 40,
+        "agreement": 0.95,
+        "kappa": 0.0,
+        "n_human_fail": 40,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 64,
+        "agreement": 0.9375,
+        "kappa": 0.8614718614718615,
+        "n_human_fail": 42,
+        "n_human_pass": 22
+      }
+    },
+    "count": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 19,
+        "agreement": 0.8947368421052632,
+        "kappa": 0.7764705882352941,
+        "n_human_fail": 11,
+        "n_human_pass": 8
+      },
+      "synthetic": {
+        "n": 8,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 8,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 27,
+        "agreement": 0.9259259259259259,
+        "kappa": 0.8085106382978723,
+        "n_human_fail": 19,
+        "n_human_pass": 8
+      }
+    },
+    "direction": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 32,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 6,
+        "n_human_pass": 26
+      },
+      "synthetic": {
+        "n": 52,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 52,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 84,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 58,
+        "n_human_pass": 26
+      }
+    },
+    "leg_direction": {
+      "mode": "human",
+      "reason": "kappa=0.33 < 0.6; real agreement=0.62 < 0.8",
+      "real": {
+        "n": 8,
+        "agreement": 0.625,
+        "kappa": 0.25,
+        "n_human_fail": 4,
+        "n_human_pass": 4
+      },
+      "synthetic": {
+        "n": 4,
+        "agreement": 0.75,
+        "kappa": 0.0,
+        "n_human_fail": 4,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 12,
+        "agreement": 0.6666666666666666,
+        "kappa": 0.33333333333333326,
+        "n_human_fail": 8,
+        "n_human_pass": 4
+      }
+    },
+    "order": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 12,
+        "agreement": 0.9166666666666666,
+        "kappa": 0.7999999999999999,
+        "n_human_fail": 9,
+        "n_human_pass": 3
+      },
+      "synthetic": {
+        "n": 6,
+        "agreement": 0.8333333333333334,
+        "kappa": 0.0,
+        "n_human_fail": 6,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 18,
+        "agreement": 0.8888888888888888,
+        "kappa": 0.6842105263157894,
+        "n_human_fail": 15,
+        "n_human_pass": 3
+      }
+    },
+    "relation": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 8,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 4,
+        "n_human_pass": 4
+      },
+      "synthetic": {
+        "n": 4,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 4,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 12,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 8,
+        "n_human_pass": 4
+      }
+    },
+    "simultaneous": {
+      "mode": "human",
+      "reason": "only 2 PASS labels",
+      "real": {
+        "n": 8,
+        "agreement": 0.875,
+        "kappa": 0.7142857142857143,
+        "n_human_fail": 6,
+        "n_human_pass": 2
+      },
+      "synthetic": {
+        "n": 2,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 2,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 10,
+        "agreement": 0.9,
+        "kappa": 0.7368421052631581,
+        "n_human_fail": 8,
+        "n_human_pass": 2
+      }
+    },
+    "target": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 8,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 5,
+        "n_human_pass": 3
+      },
+      "synthetic": {
+        "n": 6,
+        "agreement": 0.8333333333333334,
+        "kappa": 0.0,
+        "n_human_fail": 6,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 14,
+        "agreement": 0.9285714285714286,
+        "kappa": 0.810810810810811,
+        "n_human_fail": 11,
+        "n_human_pass": 3
+      }
+    },
+    "torso_direction": {
+      "mode": "human",
+      "reason": "only 0 real Pilot labels; n=0 < 10; only 0 FAIL labels; only 0 PASS labels; kappa=None < 0.6; real agreement=None < 0.8",
+      "real": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      },
+      "synthetic": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 0,
+        "agreement": null,
+        "kappa": null,
+        "n_human_fail": 0,
+        "n_human_pass": 0
+      }
+    },
+    "turn_direction": {
+      "mode": "auto",
+      "reason": "meets all gates",
+      "real": {
+        "n": 20,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 5,
+        "n_human_pass": 15
+      },
+      "synthetic": {
+        "n": 45,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 45,
+        "n_human_pass": 0
+      },
+      "combined": {
+        "n": 65,
+        "agreement": 1.0,
+        "kappa": 1.0,
+        "n_human_fail": 50,
+        "n_human_pass": 15
+      }
+    }
+  },
+  "evaluator_thresholds": {
+    "ActionEvaluator": {
+      "thresholds": {
+        "walk_min_duration_s": 1.0,
+        "walk_min_distance_m": 0.5,
+        "turn_min_deg": 45,
+        "min_events": 1
+      },
+      "status": "frozen_v1.0"
+    },
+    "AttributeEvaluator": {
+      "thresholds": {
+        "speed_ratio": 1.2,
+        "min_walk_speed": 0.3,
+        "abs_slow_max": 0.9,
+        "abs_fast_min": 1.4
+      },
+      "status": "frozen_v1.0"
+    },
+    "BodyFrameDirectionEvaluator": {
+      "thresholds": {
+        "min_displacement": 0.5
+      },
+      "status": "frozen_v1.0"
+    },
+    "BodySideEvaluator": {
+      "thresholds": {
+        "min_activity": 0.9,
+        "side_margin": 0.25,
+        "both_max_imbalance": 0.5
+      },
+      "status": "frozen_v1.0"
+    },
+    "CountEvaluator": {
+      "thresholds": {
+        "tolerance": 0
+      },
+      "status": "frozen_v1.0"
+    },
+    "LimbGeometryEvaluator": {
+      "thresholds": {
+        "min_extent": 0.2,
+        "min_dominance": 1.2
+      },
+      "status": "frozen_v1.0"
+    },
+    "OrderEvaluator": {
+      "thresholds": {
+        "min_start_gap_frames": 20
+      },
+      "status": "frozen_v1.0"
+    },
+    "RotationEvaluator": {
+      "thresholds": {
+        "min_turn_deg": 45
+      },
+      "status": "frozen_v1.0"
+    },
+    "SimultaneousEvaluator": {
+      "thresholds": {
+        "min_overlap_ratio": 0.5
+      },
+      "status": "frozen_v1.0"
+    },
+    "SpatialRelationEvaluator": {
+      "thresholds": {
+        "target_max_dist_sw": 0.75,
+        "cross_min_sw": 0.1,
+        "above_head_min_m": 0.05,
+        "front_min_sw": 1.0,
+        "behind_min_sw": 0.2,
+        "together_max_sw": 0.4
+      },
+      "status": "frozen_v1.0"
+    },
+    "TorsoGeometryEvaluator": {
+      "thresholds": {
+        "min_tilt_deg": 15.0,
+        "min_dominance": 1.5
+      },
+      "status": "provisional_not_frozen"
+    },
+    "TrajectoryEvaluator": {
+      "thresholds": {
+        "min_displacement": 0.5
+      },
+      "status": "pilot_candidate_not_frozen"
+    },
+    "VLMEvaluator": {
+      "thresholds": null,
+      "status": null
+    }
+  }
+}
