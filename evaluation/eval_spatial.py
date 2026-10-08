@@ -65,8 +65,9 @@ class SpatialRelationEvaluator(RuleEvaluator):
         "behind_min_sw": 0.2,
         "together_max_sw": 0.4,
     }
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+   
+    CURRENT_THRESHOLDS = {"target_max_dist_sw": 0.75, "cross_min_sw": 0.1, "above_head_min_m": 0.05, "front_min_sw": 1.0, "behind_min_sw": 0.2, "together_max_sw": 0.4}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def _effectors(self, requirement, case):
         ctx = E.requirement_context(requirement, case)
