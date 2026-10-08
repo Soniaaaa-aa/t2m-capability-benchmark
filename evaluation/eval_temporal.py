@@ -35,8 +35,8 @@ RuleEvaluator = current()   # base class bound to the loaded common.py (safe aft
 class CountEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "CountEvaluator"
     PROVISIONAL_THRESHOLDS = {"tolerance": 0}
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+    CURRENT_THRESHOLDS = {"tolerance": 0}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         ctx = E.requirement_context(requirement, case)
@@ -59,8 +59,8 @@ class CountEvaluator(RuleEvaluator):
 class OrderEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "OrderEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_start_gap_frames": 1}
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+    CURRENT_THRESHOLDS = {"min_start_gap_frames": 20}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         a = self.analyse(motion)
@@ -91,8 +91,8 @@ class OrderEvaluator(RuleEvaluator):
 class SimultaneousEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "SimultaneousEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_overlap_ratio": 0.5}
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+    CURRENT_THRESHOLDS = {"min_overlap_ratio": 0.5}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         a = self.analyse(motion)
