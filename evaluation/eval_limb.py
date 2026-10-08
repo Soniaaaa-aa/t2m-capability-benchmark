@@ -49,8 +49,8 @@ HORIZONTAL = ("outward", "inward", "forward", "backward")
 class LimbGeometryEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "LimbGeometryEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_extent": 0.35, "min_dominance": 1.2}
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+    CURRENT_THRESHOLDS = {"min_extent": 0.2, "min_dominance": 1.2}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         rtype = requirement.get("type")
