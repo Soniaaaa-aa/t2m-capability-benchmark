@@ -27,8 +27,9 @@ SIGN = {"left": 1.0, "right": -1.0, "counterclockwise": 1.0, "clockwise": -1.0}
 class RotationEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "RotationEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_turn_deg": 45.0}
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+
+    CURRENT_THRESHOLDS = {"min_turn_deg": 45.0}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def calculate_evidence(self, motion, requirement, case):
         expected = str(self.expected_of(requirement)).lower()
