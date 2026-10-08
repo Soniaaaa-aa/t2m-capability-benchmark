@@ -87,8 +87,9 @@ class AttributeEvaluator(RuleEvaluator):
         "abs_slow_max": 0.9,       # fallback without a partner, m/s
         "abs_fast_min": 1.4,
     }
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+   
+    CURRENT_THRESHOLDS = {"speed_ratio": 1.2, "min_walk_speed": 0.3, "abs_slow_max": 0.9, "abs_fast_min": 1.4}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
     def __init__(self, *args, definition_path=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -163,8 +164,9 @@ class AttributeEvaluator(RuleEvaluator):
 class BodyFrameDirectionEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "BodyFrameDirectionEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_displacement": 0.50}     # same d_min as TrajectoryEvaluator
-    CURRENT_THRESHOLDS = dict(PROVISIONAL_THRESHOLDS)
-    CURRENT_THRESHOLD_STATUS = "provisional_not_frozen"
+   
+    CURRENT_THRESHOLDS = {"min_displacement": 0.50}
+    CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
     AXES = {"forward": (1, +1), "backward": (1, -1), "right": (0, +1), "left": (0, -1)}
 
     def calculate_evidence(self, motion, requirement, case):
