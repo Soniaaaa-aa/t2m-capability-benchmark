@@ -43,7 +43,7 @@ from rule_base import current, verdict
 
 RuleEvaluator = current()   # base class bound to the loaded common.py (safe after reload)
 
-DEFAULT_DEFINITION = Path(__file__).resolve().parent.parent / "benchmark" / "pilot_benchmark_definition.json"
+DEFAULT_DEFINITION = Path(__file__).resolve().parent.parent / "benchmark" / "Benchmark_18pilot_78main.json"
 
 # NEW: lets the notebook tell AttributeEvaluator which benchmark file
 # is actually in use for this run, instead of relying on a fixed
