@@ -11,7 +11,7 @@ import synth_scenarios as S
 import validation as V
 
 REPO = Path(__file__).resolve().parents[1]
-DEFINITION = REPO / "benchmark" / "pilot_benchmark_definition.json"
+DEFINITION = REPO / "benchmark" / "Benchmark_18pilot_78main.json"
 
 
 @pytest.fixture(scope="module")
