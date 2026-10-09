@@ -153,7 +153,7 @@ def test_v12_pilot_limbs():
     """Every body_side requirement in the v1.2 Pilot resolves its limb via applies_to."""
     import json
     from pathlib import Path
-    path = Path(__file__).resolve().parents[1] / "benchmark" / "pilot_benchmark_definition.json"
+    path = Path(__file__).resolve().parents[1] / "benchmark" / "Benchmark_18pilot_78main.json"
     if not path.exists():
         pytest.skip("benchmark definition not in repo")
     ev = bs.BodySideEvaluator()
