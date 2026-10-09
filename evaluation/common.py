@@ -745,7 +745,7 @@ def save_results(rows, path, metadata=None):
 # Input loading for analysis notebooks (one call instead of STEP 3.5–9F)
 # ============================================================
 
-def load_inputs(model_name, repo_dir, benchmark_file="pilot_benchmark_definition.json",
+def load_inputs(model_name, repo_dir, benchmark_file="Benchmark_18pilot_78main.json",
                 input_root="/content/benchmark_inputs", verbose=True):
     """
     Prepare everything an evaluator-analysis notebook needs:
