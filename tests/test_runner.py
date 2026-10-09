@@ -132,7 +132,7 @@ def test_load_inputs_from_repo(tmp_path):
     (repo / "labels").mkdir()
     prompts = [{"prompt_id": c["prompt_id"], "capability": "C", "difficulty": "Easy", "text": c["prompt"],
                 "target_frames_20fps": 100, "requirements": c["requirements"]} for c in cases]
-    (repo / "benchmark" / "pilot_benchmark_definition.json").write_text(json.dumps({"prompts": prompts}))
+    (repo / "benchmark" / "Benchmark_18pilot_78main.json").write_text(json.dumps({"prompts": prompts}))
     common.save_gold_labels(labels, repo / "labels" / common.gold_label_filename("M"))
     inputs = tmp_path / "inputs" / "M"
     inputs.mkdir(parents=True)
