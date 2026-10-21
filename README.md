@@ -18,14 +18,14 @@ t2m-benchmark/
 │   │                              #   Human Gold helpers, automatic import + unified runner
 │   ├── primitives.py, events.py   #   shared measurements + event detection (walk, turn, jump, …)
 │   ├── rule_base.py               #   RuleEvaluator base class (thresholds, evidence-only mode)
-│   ├── eval_trajectory_ext.py     #   direction (body frame, default) + attribute        (member A)
+│   ├── eval_trajectory_ext.py     #   direction (body frame, default) + attribute       
 │   ├── eval_trajectory.py         #   direction, world frame (TrajectoryEvaluator) — kept for comparison
-│   ├── eval_rotation.py           #   turn_direction                                      (member A)
-│   ├── eval_body_side.py          #   body_side                                           (member B)
-│   ├── eval_limb.py               #   leg / arm / torso direction                         (member B)
-│   ├── eval_spatial.py            #   target, relation                                    (member B)
-│   ├── eval_temporal.py           #   count, order, simultaneous                          (member C)
-│   ├── eval_action.py             #   action (closed vocabulary)                          (member C)
+│   ├── eval_rotation.py           #   turn_direction                                    
+│   ├── eval_body_side.py          #   body_side                                    
+│   ├── eval_limb.py               #   leg / arm / torso direction                       
+│   ├── eval_spatial.py            #   target, relation                              
+│   ├── eval_temporal.py           #   count, order, simultaneous                       
+│   ├── eval_action.py             #   action (closed vocabulary)                        
 │   ├── validation.py, finalize.py #   calibration tools; plan B: auto/human, review sheet, final tables
 │   ├── eval_template.py           #   copy this to start a new evaluator
 │   ├── run_benchmark.ipynb        #   Pilot runner per model: load data, run ALL evaluators, labels, save
@@ -35,7 +35,6 @@ t2m-benchmark/
 │       └── analysis_rules.ipynb   #   the ONE calibration notebook for every evaluator
 ├── benchmark/                     # benchmark definition JSON — single source of truth for both halves
 ├── labels/                        # Human Gold Labels, one JSON per model
-├── tests/                         # pytest (synthetic motions in tests/synth_motion.py)
 └── .github/workflows/tests.yml    # runs the tests on every Pull Request
 ```
 
