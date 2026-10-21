@@ -1,52 +1,44 @@
 """
-eval_body_side.py — body_side requirements (BodySideEvaluator)
-===============================================================
+body_side requirements -> BodySideEvaluator: which side (left/right/both)
+performs the action.
 
-Owner: <your name>   (edit this file only via your own branch + Pull Request)
+A few Pilot examples: "kicks the left leg out to the side" -> leg; "moves
+the right hand across the body" -> arm; "walks forward while raising the
+right hand" -> arm; "jumps once with both hands raised" -> arm, both.
 
-Which side of the body — left / right / both — performs the action.
+Left/right come from the HumanML3D skeleton's anatomical joint labels
+(joint 20 is always the left wrist), not from the world X axis - so the
+result doesn't depend on which way the person is facing, or whether they
+walked or turned mid-clip.
+    arm: left 16/18/20 (shoulder, elbow, wrist), right 17/19/21
+    leg: left 1/4/7 (hip, knee, ankle), right 2/5/8
 
-Pilot usage
------------
-C2-09 / C2-10  kicks the left / right leg out to the side   -> leg
-C2-19 / C2-20  moves the left / right hand across the body  -> arm
-C4-19          walks forward while raising the right hand   -> arm
-C5-16          ... jumps once with both hands raised         -> arm (both)
+Limb activity, per frame: end effector relative to its limb root, compared
+against the neutral hanging pose (0, -L, 0), divided by limb length L, then
+take the 95th percentile over the clip. Rough feel for the numbers: ~0 is
+just hanging, ~0.5 is a walking arm swing, ~1.1 a side kick, ~1.5 hand to
+the opposite shoulder, ~2.0 arm overhead. Rotation about Y and body size
+don't move this number.
 
-Method
-------
-* Left / right come from the anatomical joint labels of the HumanML3D skeleton
-  (joint 20 is always the left wrist), not from the world X axis, so the result
-  does not depend on facing direction, walking or turning.
+Laterality index LI = (A_left - A_right) / (A_left + A_right).
 
-      arm: left 16/18/20 (shoulder, elbow, wrist)   right 17/19/21
-      leg: left 1/4/7    (hip, knee, ankle)         right 2/5/8
+Which limb (arm/leg) a requirement is about: explicit field on the
+requirement, else applies_to, else the nearest preceding action (kick->leg,
+reach/raise_hand->arm), else a sibling leg_direction/arm_direction
+requirement, else words in the prompt text, else just "auto".
 
-* Limb activity: per frame, the end effector relative to its limb root,
-  compared with the neutral hanging position (0, -L, 0), divided by the limb
-  length L. activity = 95th percentile over the clip.
-      ~0 hanging, ~0.5 walking arm swing, ~1.1 side kick, ~1.5 hand to the
-      opposite shoulder, ~2.0 arm overhead.
-  Rotation about Y and body size do not change it.
-
-* Laterality index  LI = (A_left - A_right) / (A_left + A_right).
-
-* Limb (arm / leg): explicit requirement field -> applies_to (v1.2) -> nearest preceding action
-  requirement (kick -> leg, reach / raise_hand -> arm) -> sibling
-  leg_direction / arm_direction -> words in the prompt -> "auto".
-
-Decision (thresholds calibrated against Human Gold in analysis/analysis_rules.ipynb)
---------
-  left : A_left  >= min_activity and LI >=  side_margin
+Decision (thresholds are calibrated against Human Gold in
+analysis/analysis_rules.ipynb, not hardcoded here):
+  left:  A_left  >= min_activity and LI >=  side_margin
   right: A_right >= min_activity and LI <= -side_margin
-  both : both    >= min_activity and |LI| <= both_max_imbalance
+  both:  both limbs >= min_activity and |LI| <= both_max_imbalance
 
-Without thresholds the evaluator returns pass_fail = None plus the evidence,
-consistent with TrajectoryEvaluator.
+No thresholds set -> evidence only, pass_fail stays None (same convention
+as TrajectoryEvaluator).
 
-Scope: which side moved — not whether the action itself is correct
-(ActionEvaluator), the kick direction (LimbGeometryEvaluator) or the target
-shoulder (SpatialRelationEvaluator).
+Out of scope here: whether the action itself happened (ActionEvaluator),
+which way a kick points (LimbGeometryEvaluator), or hitting a target
+shoulder (SpatialRelationEvaluator) - this file only answers "which side".
 """
 
 import numpy as np
@@ -61,16 +53,7 @@ from common import (
 
 
 class BodySideEvaluator(BaseEvaluator):
-    """
-    Evaluates body_side Requirements (left / right / both).
-
-    Left and right are taken from the anatomical joint labels of the
-    HumanML3D skeleton, not from the world X axis, so the result does not
-    depend on the facing direction or on walking / turning.
-
-    Input Motion : Standardised Motion [T, 22, 3]
-    Output       : Requirement-level result (common Evaluator Interface)
-    """
+    """body_side (left/right/both) from a [T, 22, 3] standardised motion."""
 
     EVALUATOR_NAME = "BodySideEvaluator"
     SUPPORTED_SIDES = {"left", "right", "both"}
@@ -94,9 +77,7 @@ class BodySideEvaluator(BaseEvaluator):
         "both_max_imbalance": 0.5,   # |LI| allowed for "both"
     }
 
-    # Current rule used by run_benchmark.ipynb (run_all_evaluators).
-    # After calibrating in evaluation/analysis/analysis_rules.ipynb, copy the
-    # selected values here and update the status (e.g. "frozen_v1.0").
+    # calibrated in analysis/analysis_rules.ipynb - this is what run_benchmark.ipynb actually uses
     CURRENT_THRESHOLDS = {"min_activity": 0.9, "side_margin": 0.25, "both_max_imbalance": 0.5}
     CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
 
@@ -105,13 +86,10 @@ class BodySideEvaluator(BaseEvaluator):
         return cls(thresholds=cls.CURRENT_THRESHOLDS, threshold_status=cls.CURRENT_THRESHOLD_STATUS)
 
     def __init__(self, thresholds=None, threshold_status=None, percentile=95.0):
-        """
-        thresholds       : None -> evidence only (pass_fail = None), as in
-                           TrajectoryEvaluator. A dict -> PASS / FAIL decision;
-                           missing keys fall back to PROVISIONAL_THRESHOLDS.
-        threshold_status : label stored in the result, e.g. "calibrated".
-        percentile       : percentile of the per-frame deviation used as activity.
-        """
+        # thresholds=None， evidence only, same convention as TrajectoryEvaluator.
+        # A dict triggers a real PASS/FAIL decision; anything missing falls
+        # back to PROVISIONAL_THRESHOLDS. percentile is just which percentile
+        # of the per-frame deviation counts as "activity".
         if thresholds is None:
             self.thresholds = None
             self.threshold_status = "not_set"
@@ -120,9 +98,7 @@ class BodySideEvaluator(BaseEvaluator):
             self.threshold_status = threshold_status or "custom"
         self.percentile = float(percentile)
 
-    # --------------------------------------------------------
-    # 1. Which limb does the Requirement refer to?
-    # --------------------------------------------------------
+    # which limb does this requirement mean?
     @classmethod
     def _limb_from_words(cls, text):
         words = set(
@@ -141,7 +117,7 @@ class BodySideEvaluator(BaseEvaluator):
 
     def infer_limb(self, requirement, evaluation_case=None):
         """Return (limb, source) with limb in {"arm", "leg", "auto"}."""
-        # (a) explicit field on the Requirement
+        # (a1) explicit field on the Requirement
         for key in ("limb", "body_part", "effector"):
             if requirement.get(key):
                 limb = self._limb_from_words(requirement[key])
@@ -150,7 +126,7 @@ class BodySideEvaluator(BaseEvaluator):
 
         requirements = (evaluation_case or {}).get("requirements", [])
 
-        # (a2) explicit applies_to (definition v1.2+): the action(s) it refers to
+        # (a2) explicit applies_to (definition ): the action(s) it refers to
         targets = requirement.get("applies_to") or []
         if targets:
             by_id = {r.get("id"): r for r in requirements}
@@ -185,9 +161,7 @@ class BodySideEvaluator(BaseEvaluator):
 
         return "auto", "auto"
 
-    # --------------------------------------------------------
-    # 2. Limb activity evidence
-    # --------------------------------------------------------
+    # limb activity evidence 
     def limb_activity(self, motion, limb):
         """Activity of the left and right limb of one type."""
         joints = self.LIMB_JOINTS[limb]
@@ -261,9 +235,7 @@ class BodySideEvaluator(BaseEvaluator):
             },
         }
 
-    # --------------------------------------------------------
-    # 3. Decision
-    # --------------------------------------------------------
+    # decision
     def decide(self, required_side, evidence, thresholds):
         a_l, a_r = evidence["left_activity"], evidence["right_activity"]
         li = evidence["laterality_index"]
@@ -304,9 +276,7 @@ class BodySideEvaluator(BaseEvaluator):
         pass_fail, _, reason = self.decide(str(expected).lower().strip(), evidence, self.thresholds)
         return pass_fail, reason
 
-    # --------------------------------------------------------
-    # 4. Common Evaluator Interface
-    # --------------------------------------------------------
+    # common evaluator interface 
     def evaluate(self, motion, requirement, evaluation_case=None):
         required = requirement.get("value", requirement.get("expected"))
         required_side = str(required).lower().strip()
@@ -357,9 +327,7 @@ class BodySideEvaluator(BaseEvaluator):
 register_evaluator("BodySideEvaluator", BodySideEvaluator)
 
 
-# ============================================================
-# Pilot workflow helpers (used by run_benchmark.ipynb, STEP 11)
-# ============================================================
+# Pilot workflow helpers, used by run_benchmark.ipynb 
 
 def _label_or_none(human_gold_labels, case, req_index):
     """Human Gold Label, or None when no labels were loaded for this prompt."""
@@ -373,7 +341,7 @@ def collect_body_side_evidence(evaluation_cases, human_gold_labels=None):
     STEP 11A — run BodySideEvaluator WITHOUT thresholds on every body_side
     Requirement and attach the Human Gold Label (None if not available).
     """
-    evaluator = BodySideEvaluator()  # thresholds not set -> evidence only
+    evaluator = BodySideEvaluator()  # thresholds not set，evidence only
     rows = []
     for case, req_index, req in iter_requirements(evaluation_cases, "body_side"):
         motion = load_motion(case["motion_path"])
@@ -418,7 +386,7 @@ CANDIDATE_BOTH_IMBALANCE = [0.3, 0.5, 0.7]
 
 def calibrate_body_side_thresholds(rows, min_labelled_for_calibrated=10):
     """
-    STEP 11B — grid search against Human Gold (UNCERTAIN / missing excluded).
+    grid search against Human Gold (UNCERTAIN / missing excluded).
 
     Best = highest accuracy, then fewest false PASS, then closest to the
     provisional thresholds. Returns a dict with thresholds, status and details.
@@ -464,7 +432,7 @@ def calibrate_body_side_thresholds(rows, min_labelled_for_calibrated=10):
 
 
 def evaluate_body_side(evaluation_cases, thresholds, threshold_status, human_gold_labels=None):
-    """STEP 11C — final PASS / FAIL for every body_side Requirement."""
+    """ final PASS / FAIL for every body_side Requirement."""
     evaluator = BodySideEvaluator(thresholds=thresholds, threshold_status=threshold_status)
     results = []
     for case, req_index, req in iter_requirements(evaluation_cases, "body_side"):

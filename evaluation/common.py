@@ -1,20 +1,13 @@
 """
-common.py — shared benchmark code (owned by the whole team)
-============================================================
+Shared benchmark code that every evaluator depends on: benchmark settings and
+the Standardised Motion input contract, loading the benchmark definition and
+the motion package, building evaluation cases, the common Evaluator interface
+(BaseEvaluator) + registry, and the Human Gold Label helpers.
 
-Everything that every evaluator depends on lives here:
+This file affects every evaluator, so changes go through a PR with the whole
+team reviewing - anything evaluator-specific belongs in its own eval_<name>.py
+instead.
 
-- benchmark settings and the Standardised Motion input contract,
-- loading the benchmark definition and the motion package,
-- evaluation-case construction,
-- the common Evaluator interface (BaseEvaluator) and registry,
-- Human Gold Label helpers.
-
-Changing this file affects every evaluator: open a Pull Request and ask all
-members to review it. Evaluator-specific code belongs in eval_<name>.py.
-
-Origin: STEP 2–9F of Benchmark_Df5_English.ipynb, moved without changing the
-behaviour (cell outputs are printed by the same functions when verbose=True).
 """
 
 from __future__ import annotations
@@ -27,15 +20,13 @@ from pathlib import Path
 import numpy as np
 
 
-# ============================================================
-# STEP 2 — Benchmark common settings
-# ============================================================
+# common settings
 
 EXPECTED_JOINTS = 22
 EXPECTED_DIMS = 3
 DEFAULT_FPS = 20.0
 
-# Requirement Type -> Evaluator mapping (STEP 8)
+# Requirement Type 
 EVALUATION_CONFIG = {
     "action": "ActionEvaluator",
     "direction": "BodyFrameDirectionEvaluator",   # body frame (eval_trajectory_ext.py); world frame: "TrajectoryEvaluator"
@@ -56,10 +47,7 @@ EVALUATION_CONFIG = {
 SUPPORTED_REQUIREMENT_TYPES = set(EVALUATION_CONFIG)
 
 
-# ============================================================
-# STEP 3 — Benchmark Input Contract
-# ============================================================
-
+#  input contract 
 def validate_standardised_motion(motion_xyz):
     """Validate the numerical parts of the benchmark input contract."""
     if not isinstance(motion_xyz, np.ndarray):
@@ -80,9 +68,7 @@ def load_motion(motion_path):
     return validate_standardised_motion(np.load(motion_path, allow_pickle=False))
 
 
-# ============================================================
-# STEP 3.5 — Motion package
-# ============================================================
+# motion package 
 
 def extract_motion_package(zip_path, input_root, verbose=True):
     """Extract a standardised motion ZIP (<Model>/<prompt_id>.npy) into input_root."""
@@ -102,9 +88,7 @@ def extract_motion_package(zip_path, input_root, verbose=True):
     return files
 
 
-# ============================================================
-# STEP 5 — Benchmark definition
-# ============================================================
+# benchmark definition 
 
 def parse_benchmark_definition(data, source="benchmark definition"):
     """Parse benchmark-definition JSON (bytes, str or dict). Returns (definition, prompts)."""
@@ -145,9 +129,7 @@ def print_benchmark_summary(definition, prompts, source):
     print("========================================")
 
 
-# ============================================================
-# STEP 6 — Load and validate pre-generated motions
-# ============================================================
+#  load + validate pre-generated motions 
 
 def register_motions(prompts, model_name, model_input_dir, verbose=True):
     """
@@ -236,9 +218,7 @@ def register_motions(prompts, model_name, model_input_dir, verbose=True):
     return registered_motions, input_results
 
 
-# ============================================================
-# STEP 7 — Evaluation case construction
-# ============================================================
+# build evaluation cases 
 
 def build_evaluation_cases(prompts, registered_motions, model_name, verbose=True):
     motion_registry = {m["prompt_id"]: m for m in registered_motions}
@@ -279,9 +259,7 @@ def build_evaluation_cases(prompts, registered_motions, model_name, verbose=True
     return evaluation_cases
 
 
-# ============================================================
-# STEP 8 — Evaluation configuration check
-# ============================================================
+# check evaluation config 
 
 def check_evaluation_config(evaluation_cases, config=None, verbose=True):
     """Returns (used_requirement_types, missing_types, registered_status)."""
@@ -316,37 +294,19 @@ def check_evaluation_config(evaluation_cases, config=None, verbose=True):
     return used_requirement_types, missing_types, status
 
 
-# ============================================================
-# STEP 9 — Evaluator interface / registry
-# ============================================================
+# evaluator interface + registry 
 
 class BaseEvaluator(ABC):
-    """
-    Common interface for all Requirement Evaluators.
-    """
+    """Common interface every requirement evaluator implements."""
 
     @abstractmethod
     def evaluate(self, motion, requirement, evaluation_case):
         """
-        Evaluate one requirement.
-
-        Parameters
-        ----------
-        motion : np.ndarray
-            Standardised motion with shape [T, 22, 3].
-
-        requirement : dict
-            Requirement definition from the benchmark JSON.
-
-        evaluation_case : dict
-            Prompt-level evaluation information.
-
-        Returns
-        -------
-        dict
-            Requirement-level evaluation result. Recommended fields:
-            requirement_id, requirement_type, expected_value, evaluator_name,
-            pass_fail, score, evidence, reason.
+        motion: [T, 22, 3] standardised motion. requirement: one requirement
+        dict from the benchmark JSON. evaluation_case: the prompt-level info
+        around it. Should return a dict with (at least) requirement_id,
+        requirement_type, expected_value, evaluator_name, pass_fail, score,
+        evidence, reason.
         """
         pass
 
@@ -364,9 +324,7 @@ EVALUATOR_REGISTRY = {}
 
 
 def register_evaluator(name, evaluator_class):
-    """
-    Register an evaluator class.
-    """
+    """Add an evaluator class to EVALUATOR_REGISTRY under this name."""
     if not issubclass(evaluator_class, BaseEvaluator):
         raise TypeError(
             f"{evaluator_class.__name__} must inherit from BaseEvaluator."
@@ -375,9 +333,7 @@ def register_evaluator(name, evaluator_class):
 
 
 def get_evaluator(name):
-    """
-    Retrieve an evaluator class from the registry.
-    """
+    """Look up a registered evaluator class by name."""
     if name not in EVALUATOR_REGISTRY:
         raise KeyError(
             f"Evaluator '{name}' is not registered."
@@ -385,9 +341,7 @@ def get_evaluator(name):
     return EVALUATOR_REGISTRY[name]
 
 
-# ============================================================
-# STEP 9C–9F — Human Gold Labels
-# ============================================================
+# human gold labels 
 
 VALID_LABELS = {
     "P": "PASS",
@@ -401,7 +355,7 @@ def requirement_value(req):
 
 
 def make_gold_template(evaluation_cases, verbose=True):
-    """STEP 9C — one entry per Requirement, human_label = None."""
+    """one entry per Requirement, human_label = None."""
     if verbose:
         print("=" * 90)
         print("HUMAN GOLD LABEL TEMPLATE")
@@ -564,9 +518,7 @@ def iter_requirements(evaluation_cases, requirement_type):
                 yield case, req_index, req
 
 
-# ============================================================
-# Evaluator discovery — no notebook edit needed for new evaluators
-# ============================================================
+# --- evaluator auto-discovery (new eval_*.py needs no notebook edit) ---
 
 def load_all_evaluators(eval_dir=None, verbose=True):
     """
@@ -598,9 +550,7 @@ def load_all_evaluators(eval_dir=None, verbose=True):
     return loaded
 
 
-# ============================================================
-# Unified evaluation — every Requirement, every registered evaluator
-# ============================================================
+# --- run every requirement through its registered evaluator ---
 
 def _json_safe(x):
     """Drop large arrays and convert NumPy scalars so results can be saved as JSON."""
@@ -741,9 +691,7 @@ def save_results(rows, path, metadata=None):
     return path, csv_path
 
 
-# ============================================================
-# Input loading for analysis notebooks (one call instead of STEP 3.5–9F)
-# ============================================================
+# --- one-call input loading for analysis notebooks (replaces STEP 3.5-9F) ---
 
 def load_inputs(model_name, repo_dir, benchmark_file="Benchmark_18pilot_78main.json",
                 input_root="/content/benchmark_inputs", verbose=True):

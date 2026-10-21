@@ -1,25 +1,22 @@
 """
-events.py — shared event layer (whole team)
-===========================================
+Turns a standardised motion clip into a list of timed events.
 
-Turns a standardised motion into a list of timed events:
+Event(kind, start, end, side, attrs) - frames, end exclusive, 20 fps.
+kinds: walk, turn, jump, kick, reach, raise_hand, raise_hands.
 
-    Event(kind, start, end, side, attrs)      frames, end exclusive, 20 fps
+Any evaluator that cares about "when did X happen" (action, count, order,
+simultaneous, turn_direction, leg_direction, attribute) reads these same
+events, so e.g. OrderEvaluator and CountEvaluator can't end up disagreeing
+about where the jumps actually are.
 
-kinds: walk, turn, jump, kick, reach, raise_hand, raise_hands
+Detection itself (EVENT_PARAMS below) is deliberately lenient - the actual
+PASS/FAIL strictness lives in each evaluator's own CURRENT_THRESHOLDS,
+calibrated against Human Gold labels. EVENT_PARAMS only changes via PR since
+it affects every evaluator at once.
 
-Every evaluator that needs "when did X happen" (action, count, order,
-simultaneous, turn_direction, leg_direction, attribute) reads the SAME events,
-so e.g. OrderEvaluator and CountEvaluator can never disagree about where the
-jumps are.
+Second half of the file: linking requirements to events via the applies_to /
+event_sequence / event_group fields from the benchmark definition.
 
-Event detection is deliberately lenient (EVENT_PARAMS). The PASS / FAIL
-strictness lives in each evaluator's CURRENT_THRESHOLDS, which are calibrated
-against Human Gold. EVENT_PARAMS are only changed via a reviewed PR because
-they affect every evaluator.
-
-The second half of the file links requirements to events using the v1.2
-definition fields: applies_to, event_sequence, event_group.
 """
 
 from __future__ import annotations
@@ -31,38 +28,35 @@ import numpy as np
 
 import primitives as P
 
-# ============================================================================
-# Detection parameters (lenient; distances in metres for a 1.7 m person and
-# scaled by body height; rates per second)
-# ============================================================================
+# detection parameters - kept lenient on purpose. distances in metres for a
+# 1.7m person (scaled by actual body height elsewhere), rates per second.
 EVENT_PARAMS = {
-    # pre-filter: centred moving average over frames (removes per-frame jitter)
-    "smooth_window": 5,
+    "smooth_window": 5,              # centred moving average, removes per-frame jitter
     # walk
-    "walk_min_speed": 0.30,        # m/s, smoothed root speed          (plan §5: 0.3 m/s)
-    "walk_min_frames": 20,         # 1 s                               (plan §5: >= 1 s)
+    "walk_min_speed": 0.30,          # m/s, smoothed root speed
+    "walk_min_frames": 20,           # >= 1s
     "walk_merge_gap": 6,
-    "step_min_amplitude": 0.12,    # inter-foot oscillation, x leg length
-    "walk_min_steps": 2,           # alternations of the leading foot  (plan §5: feet alternate)
+    "step_min_amplitude": 0.12,      # inter-foot oscillation, x leg length
+    "walk_min_steps": 2,             # leading foot has to alternate at least this many times
     # turn
-    "turn_min_rate": 25.0,         # deg/s
-    "turn_min_angle": 30.0,        # deg, net yaw change of one turn event
+    "turn_min_rate": 25.0,           # deg/s
+    "turn_min_angle": 30.0,          # deg, net yaw change of one turn event
     "turn_merge_gap": 6,
     # jump
-    "jump_clearance": 0.05,        # lowest foot above ground (m) = airborne
+    "jump_clearance": 0.05,          # lowest foot above ground (m) counts as airborne
     "jump_min_peak_clearance": 0.07,
-    "jump_min_flight_frames": 2,   # plan §5: both feet off >= 2 frames
+    "jump_min_flight_frames": 2,     # both feet off the ground for at least this long
     "jump_merge_gap": 3,
     "running_flight_max_frames": 4,
     # legs
-    "kick_min_deviation": 0.6,     # x leg length
-    "kick_min_clearance": 0.15,    # kicking foot above ground (m)
+    "kick_min_deviation": 0.6,       # x leg length
+    "kick_min_clearance": 0.15,      # kicking foot above ground (m)
     "kick_min_frames": 3,
     # arms
-    "reach_min_deviation": 0.7,    # x arm length
+    "reach_min_deviation": 0.7,      # x arm length
     "reach_min_frames": 4,
-    "raise_min_above_shoulder": 0.05,  # wrist above shoulder (m)
-    "raise_min_frames": 5,         # plan §5: wrist above shoulder >= 0.25 s
+    "raise_min_above_shoulder": 0.05,      # wrist above shoulder (m)
+    "raise_min_frames": 5,                 # roughly 0.25s at 20fps
     "both_min_overlap_frames": 5,
 }
 
@@ -103,10 +97,9 @@ class Event:
         return d
 
 
-# ============================================================================
-# Detectors
-# ============================================================================
+# detectors 
 def _hysteresis_crossings(signal, threshold):
+    
     """Number of sign changes of a signal, only counting excursions beyond ±threshold."""
     state, changes = 0, 0
     for x in signal:
@@ -241,10 +234,9 @@ def detect_arm_events(m, prm, scale):
     return events["reach"], sorted(events["raise_hand"], key=lambda e: e.start), both
 
 
-# ============================================================================
-# Analysis (cached per motion)
-# ============================================================================
+# analysis, cached per motion 
 class MotionAnalysis:
+    
     """All primitives + events of one motion. Build with analyse(motion)."""
 
     def __init__(self, motion, params=None):
@@ -303,14 +295,13 @@ def analyse(motion, params=None):
     return _CACHE[key]
 
 
-# ============================================================================
-# Requirement linking (definition v1.2: applies_to / event_sequence / event_group)
-# ============================================================================
+# linking requirements to events (applies_to / event_sequence / event_group)
 def requirements_by_id(case):
     return {r.get("id"): r for r in (case or {}).get("requirements", []) if r.get("id")}
 
 
 def linked_action(requirement, case):
+    
     """The action requirement a modifier refers to: applies_to first, else the nearest preceding action."""
     by_id = requirements_by_id(case)
     for rid in requirement.get("applies_to") or []:
@@ -327,6 +318,7 @@ def linked_action(requirement, case):
 
 
 def modifiers_of(action_req, case, req_type):
+    
     """Values of requirements of req_type that apply to this action (e.g. its body_side)."""
     rid = (action_req or {}).get("id")
     return [r.get("value") for r in (case or {}).get("requirements", [])
@@ -338,6 +330,7 @@ def event_kind(action_value):
 
 
 def events_for_action(analysis, action_req, case, use_side=True):
+    
     """Events matching an action requirement; filtered by its body_side if one applies."""
     if action_req is None:
         return None, []
@@ -352,6 +345,7 @@ def events_for_action(analysis, action_req, case, use_side=True):
 
 
 def events_for_entry(analysis, entry, case, use_side=True):
+    
     """Events for one entry of event_sequence / event_group ({"event", "requirement_ids"})."""
     by_id = requirements_by_id(case)
     for rid in entry.get("requirement_ids") or []:
@@ -363,6 +357,7 @@ def events_for_entry(analysis, entry, case, use_side=True):
 
 
 def entries_for(requirement, case, key):
+    
     """event_sequence / event_group entries; falls back to value + applies_to (older definitions)."""
     entries = requirement.get(key)
     if entries:
@@ -374,15 +369,15 @@ def entries_for(requirement, case, key):
 
 
 def detect_events(motion, params=None):
-    """All events of a motion as one list sorted by start frame (plan §3 ②)."""
+    """All events of a motion, flattened into one list sorted by start frame."""
     a = analyse(motion, params)
     return sorted((e for evs in a.events.values() for e in evs), key=lambda e: (e.start, e.kind))
 
 
 def requirement_context(requirement, case):
     """
-    Which action a requirement refers to, and how that action is constrained
-    (plan §3: requirement_context; lives here so common.py stays untouched).
+    Which action a requirement refers to, and how that action is constrained.
+    Lives here instead of common.py so common.py doesn't need touching.
 
     Returns dict:
       action_req   the action requirement (via applies_to, else the nearest preceding action)

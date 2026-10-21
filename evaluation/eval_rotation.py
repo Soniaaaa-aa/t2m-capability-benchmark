@@ -1,43 +1,41 @@
 """
-eval_rotation.py — turn_direction requirements (RotationEvaluator)
-==================================================================
+turn_direction requirements -> RotationEvaluator.
 
-Owner: A (plan §8)   — new file; eval_trajectory.py is not touched.
+heading_yaw comes from the hip+shoulder line (positive = turned left). A turn
+event (see events.py) is a run of yaw rate >= 25 deg/s with a net change of
+>= 30 deg; the "dominant" turn is whichever event has the biggest |yaw change|.
 
-Pilot: C1-06 / C1-07 (turn left / right), C4-01, C4-02, C5-16 (turn right).
+PASS if the dominant turn goes the requested way and |yaw change| >= min_turn_deg.
+score is the signed yaw change toward the requested side (negative = wrong way).
 
-Method (plan §4)
-  heading_yaw: facing angle from the hip + shoulder line, + = turned LEFT.
-  Turn events (events.py) = runs of yaw rate >= 25 deg/s, net change >= 30 deg.
-  The dominant turn = the turn event with the largest |Δyaw|.
-
-Decision
-  PASS  dominant turn has the requested sign and |Δyaw| >= min_turn_deg
-  score = Δyaw signed toward the requested side (deg; negative = wrong way)
 """
+
 
 from common import register_evaluator
 from rule_base import current, events_json, verdict
-
-RuleEvaluator = current()   # base class bound to the loaded common.py (safe after reload)
-
+ 
+RuleEvaluator = current()  # rebind to whatever common.py is loaded right now
+ 
 SIGN = {"left": 1.0, "right": -1.0, "counterclockwise": 1.0, "clockwise": -1.0}
-
-
+ 
+ 
 class RotationEvaluator(RuleEvaluator):
     EVALUATOR_NAME = "RotationEvaluator"
     PROVISIONAL_THRESHOLDS = {"min_turn_deg": 45.0}
-
+ 
     CURRENT_THRESHOLDS = {"min_turn_deg": 45.0}
     CURRENT_THRESHOLD_STATUS = "frozen_v1.0"
-
+ 
     def calculate_evidence(self, motion, requirement, case):
         expected = str(self.expected_of(requirement)).lower()
         if expected not in SIGN:
             return {"unsupported": f"turn_direction value {expected!r}"}
         a = self.analyse(motion)
-        turns = a.get("turn")
-        net = float(a.yaw[-1] - a.yaw[0])
+        turns = a.get("turn")     # every detected turn event in the clip
+        net = float(a.yaw[-1] - a.yaw[0])     # start-to-end yaw drift, just for the message/debugging
+
+        # the biggest single turn is what actually gets judged, not the net drift -
+        # a clip that turns left hard then drifts back a little should still pass as "turn left"
         dom = max(turns, key=lambda e: abs(e.attrs["yaw_change_deg"]), default=None)
         dyaw = dom.attrs["yaw_change_deg"] if dom else 0.0
         return {
@@ -46,17 +44,19 @@ class RotationEvaluator(RuleEvaluator):
             "dominant_turn": dom.to_dict() if dom else None,
             "net_yaw_change_deg": net,
             "turn_events": events_json(turns),
-            "score": float(SIGN[expected] * dyaw),
+            "score": float(SIGN[expected] * dyaw),     # flips sign so "right" turns score positive too
         }
-
+ 
     def decide(self, ev, expected):
         need = self.thresholds["min_turn_deg"]
         ok = ev["score"] >= need
-        side = "left" if ev["dominant_yaw_change_deg"] > 0 else "right"
+        side = "left" if ev["dominant_yaw_change_deg"] > 0 else "right"     # for the message text only
         if ev["n_turn_events"] == 0:
+            # nothing to compare against - fail outright instead of letting score=0 pass some edge case
             return "FAIL", f"No turn detected (net yaw {ev['net_yaw_change_deg']:+.0f} deg)."
         return verdict(ok), (f"dominant turn {ev['dominant_yaw_change_deg']:+.0f} deg ({side}); "
                              f"required {expected} >= {need:.0f} deg")
-
-
+ 
+ 
 register_evaluator("RotationEvaluator", RotationEvaluator)
+ 

@@ -1,36 +1,34 @@
 """
-eval_action.py — action requirements (ActionEvaluator)
-======================================================
+action requirements -> ActionEvaluator.
 
-Owner: C — plan §5, simplified by plan B: rules only, no model judge.
+Vocabulary is fixed to events.ACTION_TO_EVENT (walk, turn, jump, kick, reach,
+raise_hand, raise_hands + a few synonyms like "walks"/"hop"/"raise"); anything
+outside that is not judged by rule. finalize.lint_definition checks the
+benchmark definition stays inside this list.
 
-Closed vocabulary (= events.ACTION_TO_EVENT; the Main definition must stay inside it,
-finalize.lint_definition checks this): walk, turn, jump, kick, reach, raise_hand, raise_hands
-(plus synonyms such as walks / hop / raise).
+What counts as a pass, from the events detected in events.py:
+  walk         longest walk event long enough (walk_min_duration_s) and far enough
+               (walk_min_distance_m) - a "walk" event itself already needs root
+               speed >= 0.3 m/s for >= 1s with alternating feet
+  turn         largest turn event has |yaw change| >= turn_min_deg
+  jump         at least one flight phase (both feet off the ground >= 2 frames)
+  kick         at least one kick event (one ankle lifted off neutral, other foot planted)
+  reach        at least one reach event (wrist >= 0.7 arm length from neutral)
+  raise_hand   wrist above its own shoulder for >= 0.25s
+  raise_hands  both wrists above their shoulders at once, for >= 0.25s
 
-Rules on the events of events.py
-  walk         longest walk event >= walk_min_duration_s and its net displacement
-               >= walk_min_distance_m (walk event = root speed >= 0.3 m/s for >= 1 s
-               with alternating feet)
-  turn         largest turn event |Δyaw| >= turn_min_deg
-  jump         >= 1 flight phase (both feet off >= 2 frames)
-  kick         >= 1 kick event (one ankle away from neutral and lifted, other foot planted)
-  reach        >= 1 reach event (wrist away from neutral >= 0.7 arm length)
-  raise_hand   >= 1 wrist above its shoulder for >= 0.25 s
-  raise_hands  both wrists above the shoulders together for >= 0.25 s
+Side (left/right/both) is BodySideEvaluator's job and counting repeats is
+CountEvaluator's - this file only answers "did it happen at all".
 
-Which side did it (left / right / both) is BodySideEvaluator's job, how many
-times is CountEvaluator's — ActionEvaluator only asks "did this action happen".
-
-An action outside the vocabulary returns pass_fail = None; finalize.py then routes
-that requirement to human review. No embedding / VLM judge is used (plan B).
+An action we don't recognise returns pass_fail=None, which sends it to human
+review in finalize.py instead of guessing.
 """
 
 import events as E
 from common import register_evaluator
 from rule_base import current, events_json, verdict
 
-RuleEvaluator = current()   # base class bound to the loaded common.py (safe after reload)
+RuleEvaluator = current()  # rebind to whatever common.py is loaded right now
 
 
 class ActionEvaluator(RuleEvaluator):
@@ -53,7 +51,7 @@ class ActionEvaluator(RuleEvaluator):
                     "action": action, "judge": "human_required"}
 
         a = self.analyse(motion)
-        evs = a.get(kind)                       # side is not checked here (BodySide does)
+        evs = a.get(kind)                       # left/right is BodySideEvaluator's job, not ours
         ev = {"action": action, "event_kind": kind, "n_events": len(evs), "events": events_json(evs)}
         if kind == "walk":
             best = max(evs, key=lambda e: e.duration, default=None)
